@@ -74,5 +74,10 @@ namespace StudyTracker_WF.Study
         {
             GridView1.DataBind();
         }
+
+        protected void DetailsView1_ItemDeleted(object sender, DetailsViewDeletedEventArgs e)
+        {
+            GridView1.DataBind();
+        }
     }
 }

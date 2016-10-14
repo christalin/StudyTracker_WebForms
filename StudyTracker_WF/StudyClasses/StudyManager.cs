@@ -42,11 +42,16 @@ namespace StudyTracker_WF.StudyClasses
             DataTable dt = new DataTable();
             SqlDataAdapter da = null;
             SqlCommand cmd = null;
-
-            string sql = "SELECT * FROM Study WHERE Id = @Id";
-            cmd = new SqlCommand(sql,
+        //    string sqls = "SELECT * FROM Study WHERE Id = "+Id;
+            //string sql = "SELECT * FROM Study WHERE Id = @Id";
+            string storedProc = "GetStudyById";
+            cmd = new SqlCommand(storedProc,
               new SqlConnection(ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString));
-
+            cmd.CommandType = CommandType.StoredProcedure;
+            //var param = new SqlParameter();
+            //param.DbType=DbType.Int32;
+            //param.Value = Id;
+            //param.ParameterName = "@Id";
             cmd.Parameters.Add(new SqlParameter("@Id", Id));
 
             da = new SqlDataAdapter(cmd);
@@ -75,14 +80,23 @@ namespace StudyTracker_WF.StudyClasses
             conn = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             SqlConnection objsqlconn = new SqlConnection(conn);
             objsqlconn.Open();
-            string sql = "Insert into Study(Title,PrincipalInvestigator,[Availability],[CreatedBy],[CreatedDate]," +
-                         "[UpdatedBy],[UpdatedDate])" +
-                         " Values('" + inStudy.Title + "','" + inStudy.PrincipalInvestigator + "','"
-                         + inStudy.Availability + "', 'christy',getdate(),'christy',getdate())";
+            //string sql = "Insert into Study(Title,PrincipalInvestigator,[Availability],[CreatedBy],[CreatedDate]," +
+            //             "[UpdatedBy],[UpdatedDate])" +
+            //             " Values(@Title, @PrincipalInvestigator, @Availability, @CreatedBy, getdate(), @UpdatedBy, getdate())";
+            string storedProcInsert = "InsertStudy";
 
-
-            SqlCommand objcmd = new SqlCommand(sql,
+            SqlCommand objcmd = new SqlCommand(storedProcInsert,
                                                objsqlconn);
+            objcmd.CommandType = CommandType.StoredProcedure;
+
+            objcmd.Parameters.Add(new SqlParameter("@Title", inStudy.Title));
+            objcmd.Parameters.Add(new SqlParameter("@PrincipalInvestigator", inStudy.PrincipalInvestigator));
+            objcmd.Parameters.Add(new SqlParameter("@Availability", inStudy.Availability));
+            objcmd.Parameters.Add(new SqlParameter("@CreatedBy", "Christy"));
+            objcmd.Parameters.Add(new SqlParameter("@CreatedDate", DateTime.Now));
+            objcmd.Parameters.Add(new SqlParameter("@UpdatedBy", "Christy"));
+            objcmd.Parameters.Add(new SqlParameter("@UpdatedDate", DateTime.Now));
+
             objcmd.ExecuteNonQuery();
             return true;
         }
@@ -93,28 +107,42 @@ namespace StudyTracker_WF.StudyClasses
             conn = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             SqlConnection objsqlconn = new SqlConnection(conn);
             objsqlconn.Open();
-            string updateSql = "UPDATE [dbo].[Study] SET[Title] = '" + inStudy.Title + "'," +
-                               "[PrincipalInvestigator] ='"+inStudy.PrincipalInvestigator+"'," +
-                               "[Availability] = '"+inStudy.Availability+"',[CreatedBy] = '"+inStudy.CreatedBy+"'," +
-                               "[CreatedDate] = getdate(),[UpdatedBy] = '"+inStudy.UpdatedBy+ "',[UpdatedDate] = getdate() " +
-                               "WHERE Id = '"+ inStudy.Id + "'";
+            //string updateSql =
+            //    "UPDATE[Study] SET[Title] = @Title, [PrincipalInvestigator] = @PrincipalInvestigator," +
+            //    "[Availability]= @Availability, [CreatedBy] = @CreatedBy, [CreatedDate] = getdate(), " +
+            //    "[UpdatedBy] = @UpdatedBy, [UpdatedDate] = getDate() WHERE Id = @Id";
+            string storedProcUpdate = "UpdateStudy";
+            SqlCommand objcmd = new SqlCommand(storedProcUpdate, objsqlconn);
+            objcmd.CommandType = CommandType.StoredProcedure;
 
-            SqlCommand objcmd = new SqlCommand(updateSql,objsqlconn);
+            objcmd.Parameters.Add(new SqlParameter("@Id", inStudy.Id));
+            objcmd.Parameters.Add(new SqlParameter("@Title", inStudy.Title));
+            objcmd.Parameters.Add(new SqlParameter("@PrincipalInvestigator", inStudy.PrincipalInvestigator));
+            objcmd.Parameters.Add(new SqlParameter("@Availability", inStudy.Availability));
+            objcmd.Parameters.Add(new SqlParameter("@CreatedBy", inStudy.CreatedBy));
+            objcmd.Parameters.Add(new SqlParameter("@CreatedDate", DateTime.Now));
+            objcmd.Parameters.Add(new SqlParameter("@UpdatedBy", inStudy.UpdatedBy));
+            objcmd.Parameters.Add(new SqlParameter("@UpdatedDate", DateTime.Now));
+
+
             objcmd.ExecuteNonQuery();
             
             return true;
         }
 
-        public bool DeleteStudy(int Id)
+        public void DeleteStudy(Study inStudy)
         {
             string conn = "";
             conn = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             SqlConnection objsqlconn = new SqlConnection(conn);
             objsqlconn.Open();
-            string deleteSql = "DELETE From Study WHERE Id = '" + Id + "'";
-            SqlCommand objcmd = new SqlCommand(deleteSql, objsqlconn);
+            //string deleteSql = "DELETE From Study WHERE Id = @Id";
+            string storedProcDelete = "DeleteStudy";
+            SqlCommand objcmd = new SqlCommand(storedProcDelete, objsqlconn);
+            objcmd.CommandType = CommandType.StoredProcedure;
+            objcmd.Parameters.Add(new SqlParameter("@Id", inStudy.Id));
             objcmd.ExecuteNonQuery();
-            return true;
+            
         }
 
     }
