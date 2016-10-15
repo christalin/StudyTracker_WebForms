@@ -17,10 +17,11 @@ namespace StudyTracker_WF.Study
         {
             if (!Page.IsPostBack)
             {
-              // GridView1.DataBind();
+                //hdnAddMode.Value = "false";
+                // GridView1.DataBind();
                 // Make sure the GridView writes a 'thead' tag
                 // This helps with the responsiveness
-               // GridView1.HeaderRow.TableSection = TableRowSection.TableHeader;
+                // GridView1.HeaderRow.TableSection = TableRowSection.TableHeader;
             }
         }
 
@@ -55,16 +56,16 @@ namespace StudyTracker_WF.Study
         protected void CreateStudy(object sender, EventArgs e)
         {
            var p=new StudyClasses.Study();
-            p.Title = txtTitle.Text;
-            p.PrincipalInvestigator = txtPI.Text;
-            p.Availability = txtavail.Checked;
+            p.Title = TextTitle.Text;
+            p.PrincipalInvestigator = TextPI.Text;
+            p.Availability = TextAvail.Checked;
             StudyManager sm = new StudyManager();
             bool rt = sm.Insert(p);
             if (rt == true)
             {
                 //GridView1.DataSource = sm.GetStudies();
                 GridView1.DataBind();
-                lblInsertInfo.Text = "Success!!!!!!!!!!"+p.Title+" is saved.";
+             //   lblInsertInfo.Text = "Success!!!!!!!!!!"+p.Title+" is saved.";
             } 
             
             //sm.Insert(txtTitle.Text, txtPI.Text, txtavail.Checked);
