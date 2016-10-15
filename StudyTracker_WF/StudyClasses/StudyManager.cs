@@ -103,6 +103,7 @@ namespace StudyTracker_WF.StudyClasses
 
         public bool UpdateStudy(Study inStudy)
         {
+            
             string conn = "";
             conn = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             SqlConnection objsqlconn = new SqlConnection(conn);
