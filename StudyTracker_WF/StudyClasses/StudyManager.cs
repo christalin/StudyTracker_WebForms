@@ -14,8 +14,9 @@ namespace StudyTracker_WF.StudyClasses
         {
             DataTable dt = new DataTable();
             SqlDataAdapter da = null;
-            string sql = "SELECT * FROM Study";
-            da = new SqlDataAdapter(sql,
+            //string sql = "SELECT * FROM Study";
+            string storedprocGetstudies = "GetStudies";
+            da = new SqlDataAdapter(storedprocGetstudies,
                                     ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString);
 
             da.Fill(dt);
