@@ -112,7 +112,6 @@
                     </ItemTemplate>
                 </asp:TemplateField>
                 <%--                    <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" />--%>
-                <asp:BoundField DataField="Title" HeaderText="Title" SortExpression="Title" />
                 <asp:BoundField DataField="PrincipalInvestigator" HeaderText="PrincipalInvestigator" SortExpression="PrincipalInvestigator" />
                 <asp:CheckBoxField DataField="Availability" HeaderText="Availability" SortExpression="Availability" />
                 <%--                    <asp:CommandField ShowSelectButton="True" />--%>
