@@ -112,5 +112,20 @@ namespace StudyTracker_WF.SiteClasses
 
             return true;
         }
+
+        public void DeleteSite(Site inSite)
+        {
+            string conn = "";
+            conn = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+            SqlConnection objsqlconn = new SqlConnection(conn);
+            objsqlconn.Open();
+            //string deleteSql = "DELETE From Study WHERE Id = @Id";
+            string storedProcDelete = "DeleteSite";
+            SqlCommand objcmd = new SqlCommand(storedProcDelete, objsqlconn);
+            objcmd.CommandType = CommandType.StoredProcedure;
+            objcmd.Parameters.Add(new SqlParameter("@SiteId", inSite.SiteId));
+            objcmd.ExecuteNonQuery();
+
+        }
     }
 }

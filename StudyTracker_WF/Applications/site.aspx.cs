@@ -74,5 +74,14 @@ namespace StudyTracker_WF.Applications
 
             }
         }
+
+        protected void sbtnDelete_OnClickbtnDelete_OnClick(object sender, EventArgs e)
+        {
+            SiteManager sd = new SiteManager();
+            var de = new SiteClasses.Site();
+            de.SiteId = Convert.ToInt32(shdnPK.Value);
+            sd.DeleteSite(de);
+            GridView1.DataBind();
+        }
     }
 }

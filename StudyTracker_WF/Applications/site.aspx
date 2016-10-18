@@ -80,6 +80,11 @@
                                 OnClick="sbtnSave_Click"
                                 ClientIDMode="Static"
                                 runat="server"/>
+                            <asp:Button ID="sbtnDelete" runat="server"
+                            Text="Delete" CssClass="btn btn-danger"
+                            title="Delete Site"
+                            ClientIDMode="Static"
+                            OnClick="sbtnDelete_OnClickbtnDelete_OnClick" />
                         </div>
                     </div>
                 </div>

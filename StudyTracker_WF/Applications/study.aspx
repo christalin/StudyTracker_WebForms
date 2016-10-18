@@ -10,9 +10,10 @@
             $("#TextTitle").val("");
             $("#TextPI").val("");
             $("#btnsave").val("Create Study");
+            $("#btnDelete").hide();
             $("#hdnAddMode").val("true");
             $("#studyDialog").modal();
-            
+
         }
     </script>
 </asp:Content>
@@ -38,11 +39,11 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dimiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" runat="server" id="lblTitle" ClientIDMode="Static">Study</h4>
+                            <h4 class="modal-title" runat="server" id="lblTitle" clientidmode="Static">Study</h4>
                         </div>
                         <div class="modal-body">
                             <input type="hidden" id="hdnPK" runat="server" />
-                            <input type="hidden" id="hdnAddMode" runat="server" value="false" ClientIDMode="Static"/>
+                            <input type="hidden" id="hdnAddMode" runat="server" value="false" clientidmode="Static" />
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class="form-group">
@@ -74,54 +75,72 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="divMessageArea" runat="server" visible="false">
+                                <div class="clearfix"></div>
+                                <div class="row messageArea">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="well">
+                                            <asp:Label ID="lblMessage" runat="server"
+                                                CssClass="text-warning"
+                                                Text="This is some text to show what a message would look like."></asp:Label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <asp:Button ID="btnCancel" runat="server" Text="Cancel"
-                                CssClass="btn btn-default"
-                                title="Cancel"
-                                formnovalidate="formvalidate" UseSubmitBehavior="false"
-                                data-dismiss="modal"
-                                ClientIDMode="Static" />
-                            <asp:Button ID="btnsave" runat="server"
-                                Text="Save" CssClass="btn btn-default"
-                                title="Create Study"
-                                ClientIDMode="Static"
-                                OnClick="btnSave_Click" />
-                        </div>
-
                     </div>
+                    <div class="modal-footer">
+                        <asp:Button ID="btnCancel" runat="server" Text="Cancel"
+                            CssClass="btn btn-default"
+                            title="Cancel"
+                            formnovalidate="formvalidate" UseSubmitBehavior="false"
+                            data-dismiss="modal"
+                            ClientIDMode="Static" />
+                        <asp:Button ID="btnsave" runat="server"
+                            Text="Save" CssClass="btn btn-primary"
+                            title="Create Study"
+                            ClientIDMode="Static"
+                            OnClick="btnSave_Click" />
+                        <asp:Button ID="btnDelete" runat="server"
+                            Text="Delete" CssClass="btn btn-danger"
+                            title="Delete Study"
+                            ClientIDMode="Static"
+                            OnClick="btnDelete_OnClick" />
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+ 
 
 
    <div class="table-responsive">
 
-        <asp:GridView ID="GridView1" runat="server" DataSourceID="ObjectDataSource1"
-            CssClass="table table-striped table-bordered"
-            PageSize="10"
-            AllowPaging="True"
-            DataKeyNames="Id" AutoGenerateColumns="False">
-            <Columns>
-                <asp:TemplateField HeaderText="Study Name">
-                    <ItemTemplate>
-                        <a href='study.aspx?id=<%#Eval("Id") %>'>
-                            <asp:Label ID="lblTitle" runat="server" ClientIDMode="Static" Text='<%# Bind("Title") %>'></asp:Label>
-                        </a>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <%--                    <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" />--%>
-                <asp:BoundField DataField="PrincipalInvestigator" HeaderText="PrincipalInvestigator" SortExpression="PrincipalInvestigator" />
-                <asp:CheckBoxField DataField="Availability" HeaderText="Availability" SortExpression="Availability" />
-                <%--                    <asp:CommandField ShowSelectButton="True" />--%>
-            </Columns>
-        </asp:GridView>
+       <asp:GridView ID="GridView1" runat="server" DataSourceID="ObjectDataSource1"
+           CssClass="table table-striped table-bordered"
+           PageSize="10"
+           AllowPaging="True"
+           DataKeyNames="Id" AutoGenerateColumns="False">
+           <Columns>
+               <asp:TemplateField HeaderText="Study Name">
+                   <ItemTemplate>
+                       <a href='study.aspx?id=<%#Eval("Id") %>'>
+                           <asp:Label ID="lblTitle" runat="server" ClientIDMode="Static" Text='<%# Bind("Title") %>'></asp:Label>
+                       </a>
+                   </ItemTemplate>
+               </asp:TemplateField>
+               <%--                    <asp:BoundField DataField="Id" HeaderText="Id" SortExpression="Id" />--%>
+               <asp:BoundField DataField="PrincipalInvestigator" HeaderText="PrincipalInvestigator" SortExpression="PrincipalInvestigator" />
+               <asp:CheckBoxField DataField="Availability" HeaderText="Availability" SortExpression="Availability" />
+               <%--                    <asp:CommandField ShowSelectButton="True" />--%>
+           </Columns>
+       </asp:GridView>
 
-        <asp:ObjectDataSource ID="ObjectDataSource1" runat="server" SelectMethod="GetStudies"
-            TypeName="StudyTracker_WF.StudyClasses.StudyManager"></asp:ObjectDataSource>
+       <asp:ObjectDataSource ID="ObjectDataSource1" runat="server" SelectMethod="GetStudies"
+           TypeName="StudyTracker_WF.StudyClasses.StudyManager"></asp:ObjectDataSource>
 
-    </div>
+   </div>
 
 
 </asp:Content>

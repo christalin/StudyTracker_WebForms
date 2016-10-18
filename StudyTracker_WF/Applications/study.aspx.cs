@@ -21,8 +21,9 @@ namespace StudyTracker_WF.Study
                 if (Request.QueryString["id"] != null)
                 {
                     var pk = Convert.ToString(Request.QueryString["id"]);
-                    lblTitle.InnerText = "Update Study";
+                    lblTitle.InnerText = "Update/Delete Study";
                     btnsave.Text = "Update Study";
+                    btnDelete.Text = "Delete Study";
                     hdnPK.Value = pk;
                     hdnAddMode.Value = "false";
 
@@ -43,6 +44,7 @@ namespace StudyTracker_WF.Study
             TextAvail.Checked = e.Availability;
             hdnPK.Value = e.Id.ToString();
             hdnAddMode.Value = "false";
+            
         }
 
         public void LoadEditScript()
@@ -56,52 +58,6 @@ namespace StudyTracker_WF.Study
             Page.ClientScript.RegisterStartupScript(this.GetType(), "EditData", sb.ToString(), true);
 
            }
-
-        //public void BindGridview()
-        //{
-        //    string connString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
-        //    DataSet dsPubs = new DataSet();
-        //    using (var connection = new SqlConnection(connString))
-        //    {
-        //        SqlDataAdapter daAuthors
-        //            = new SqlDataAdapter("Select * From Study", connection);
-
-        //        //daAuthors.FillSchema(dsPubs, SchemaType.Source, "Authors");
-        //        connection.Open();
-        //        daAuthors.Fill(dsPubs);
-
-        //        //DataTable tblAuthors;
-        //        //tblAuthors = dsPubs.Tables["Authors"];
-        //    }
-        //    StudyManager sm = new StudyManager();
-        //    GridView1.DataSource = sm.GetStudies();
-        //    GridView1.DataBind();
-        //    //GridView1.DataSource = dsPubs;
-        //    //GridView1.DataBind();
-        //}
-
-        //protected void btnClick_OnClick(object sender, EventArgs e)
-        //{
-        //    BindGridview();
-        //}
-
-        //protected void CreateStudy(object sender, EventArgs e)
-        //{
-        //   var p=new StudyClasses.Study();
-        //    p.Title = TextTitle.Text;
-        //    p.PrincipalInvestigator = TextPI.Text;
-        //    p.Availability = TextAvail.Checked;
-        //    StudyManager sm = new StudyManager();
-        //    bool rt = sm.Insert(p);
-        //    if (rt == true)
-        //    {
-        //        //GridView1.DataSource = sm.GetStudies();
-        //        GridView1.DataBind();
-        //     //   lblInsertInfo.Text = "Success!!!!!!!!!!"+p.Title+" is saved.";
-        //    } 
-            
-        //    //sm.Insert(txtTitle.Text, txtPI.Text, txtavail.Checked);
-        //}
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
@@ -123,22 +79,23 @@ namespace StudyTracker_WF.Study
                 study.Id = Convert.ToInt32(hdnPK.Value);
                 sm.UpdateStudy(study);
                 GridRefresh();
+
+
             }
         }
 
-        //protected void DetailsView1_ItemUpdated(object sender, DetailsViewUpdatedEventArgs e)
-        //{
-        //    GridView1.DataBind();
-        //}
-
-        //protected void DetailsView1_ItemDeleted(object sender, DetailsViewDeletedEventArgs e)
-        //{
-        //    GridView1.DataBind();
-        //}
-
-        private void GridRefresh()
+       private void GridRefresh()
         {
             GridView1.DataBind();
+        }
+
+        protected void btnDelete_OnClick(object sender, EventArgs e)
+        {
+            StudyManager sd = new StudyManager();
+            var d = new StudyClasses.Study();
+            d.Id = Convert.ToInt32(hdnPK.Value);
+            sd.DeleteStudy(d);
+            GridRefresh();
         }
     }
 }
