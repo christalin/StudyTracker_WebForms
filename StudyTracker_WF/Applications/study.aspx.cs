@@ -38,11 +38,11 @@ namespace StudyTracker_WF.Study
         {
             StudyManager smr = new StudyManager();
             //StudyClasses.Study e = new StudyClasses.Study();
-            var e = smr.GetStudy(Convert.ToInt32(pk));
-            TextTitle.Text = e.Title;
-            TextPI.Text = e.PrincipalInvestigator;
-            TextAvail.Checked = e.Availability;
-            hdnPK.Value = e.Id.ToString();
+            var s = smr.GetStudy(Convert.ToInt32(pk));
+            TextTitle.Text = s.Title;
+            TextPI.Text = s.PrincipalInvestigator;
+            TextAvail.Checked = s.Availability;
+            hdnPK.Value = s.Id.ToString();
             hdnAddMode.Value = "false";
             
         }
@@ -61,41 +61,84 @@ namespace StudyTracker_WF.Study
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            StudyManager sm = new StudyManager();
-            var study = new StudyClasses.Study();
-            study.Title = TextTitle.Text;
-            study.PrincipalInvestigator = TextPI.Text;
-            study.Availability = TextAvail.Checked;
-            study.CreatedBy = "Christy";
-            study.UpdatedBy = "Christy";
-
-            if (Convert.ToBoolean(hdnAddMode.Value))
+            try
             {
-                sm.Insert(study);
-                GridRefresh();
+                KeepModalOpenScript();
+                StudyManager sm = new StudyManager();
+                var study = new StudyClasses.Study();
+                study.Title = TextTitle.Text;
+                study.PrincipalInvestigator = TextPI.Text;
+                study.Availability = TextAvail.Checked;
+                study.CreatedBy = "Christy";
+                study.UpdatedBy = "Christy";
+
+                if (Convert.ToBoolean(hdnAddMode.Value))
+                {
+                    lblMessage.Text = "Inserting";
+                    btnsave.Text = "Create Study";
+                    sm.Insert(study);
+                    lblMessage.Text = "Study inserted Successfully!!!!";
+                    divMessageArea.Visible = true;
+                    GridRefresh();
+                }
+                else
+                {
+                    lblMessage.Text = "Updating";
+                    study.Id = Convert.ToInt32(hdnPK.Value);
+                    sm.UpdateStudy(study);
+                    lblMessage.Text = "Study updated Successfully!!!!";
+                    divMessageArea.Visible = true;
+                    GridRefresh();
+
+                }
+                
             }
-            else
+            catch (Exception a)
             {
-                study.Id = Convert.ToInt32(hdnPK.Value);
-                sm.UpdateStudy(study);
-                GridRefresh();
-
-
+                lblMessage.Text = "Error while " + lblMessage.Text + " a Study Record!!";
+                divMessageArea.Visible = true;
             }
+            
+        }
+        public void KeepModalOpenScript()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("$(document).ready(function() {");
+            sb.AppendLine("$('#studyDialog').modal({ show: true });");
+            sb.AppendLine("$('#btnDelete').hide()");
+            sb.AppendLine("$('#sbtnsave').hide()");
+            sb.AppendLine("$('#hdnAddMode').val('true')");
+            sb.AppendLine("});");
+
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "Pop", sb.ToString(), true);
+
         }
 
-       private void GridRefresh()
+        private void GridRefresh()
         {
             GridView1.DataBind();
         }
 
         protected void btnDelete_OnClick(object sender, EventArgs e)
         {
-            StudyManager sd = new StudyManager();
-            var d = new StudyClasses.Study();
-            d.Id = Convert.ToInt32(hdnPK.Value);
-            sd.DeleteStudy(d);
-            GridRefresh();
+            try
+            {
+                KeepModalOpenScript();
+                StudyManager sd = new StudyManager();
+                var d = new StudyClasses.Study();
+                d.Id = Convert.ToInt32(hdnPK.Value);
+                sd.DeleteStudy(d);
+                lblMessage.Text = "Study deleted Successfully!!";
+                divMessageArea.Visible = true;
+                GridRefresh();
+            }
+            catch (Exception b)
+            {
+                lblMessage.Text = "Error while Deleting Study";
+                divMessageArea.Visible = true;
+            }
+
         }
     }
 }

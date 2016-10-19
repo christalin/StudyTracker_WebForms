@@ -58,6 +58,24 @@ namespace StudyTracker_WF.Applications {
         protected global::System.Web.UI.WebControls.TextBox TextLocation;
         
         /// <summary>
+        /// divMessageArea control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divMessageArea;
+        
+        /// <summary>
+        /// lblsMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblsMessage;
+        
+        /// <summary>
         /// sbtnCancel control.
         /// </summary>
         /// <remarks>

@@ -3,7 +3,7 @@
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../Content/PagerStyle.css" rel="stylesheet" type="text/css" />
-    <script>
+    <script  type="text/javascript">
         function AddData() {
             $("#hdnPK").val("-1");
             $("#lblTitle").text("Add New Study");
@@ -12,9 +12,11 @@
             $("#btnsave").val("Create Study");
             $("#btnDelete").hide();
             $("#hdnAddMode").val("true");
+            $("#MainContent_divMessageArea").hide();
             $("#studyDialog").modal();
 
         }
+        
     </script>
 </asp:Content>
 
@@ -38,7 +40,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dimiss="modal" aria-hidden="true">&times;</button>
+                            <%--<button type="button" class="close" data-dimiss="modal" aria-hidden="true">&times;</button>--%>
                             <h4 class="modal-title" runat="server" id="lblTitle" clientidmode="Static">Study</h4>
                         </div>
                         <div class="modal-body">
@@ -81,6 +83,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <div class="well">
                                             <asp:Label ID="lblMessage" runat="server"
+                                                ClientIDMode="Static"
                                                 CssClass="text-warning"
                                                 Text="This is some text to show what a message would look like."></asp:Label>
                                         </div>
@@ -88,9 +91,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                       
                     <div class="modal-footer">
-                        <asp:Button ID="btnCancel" runat="server" Text="Cancel"
+                        <asp:Button ID="btnCancel" runat="server" Text="Close"
                             CssClass="btn btn-default"
                             title="Cancel"
                             formnovalidate="formvalidate" UseSubmitBehavior="false"
@@ -106,13 +109,13 @@
                             title="Delete Study"
                             ClientIDMode="Static"
                             OnClick="btnDelete_OnClick" />
-                    </div>
-
+                    
+                   </div>
                 </div>
             </div>
         </div>
     </div>
- 
+ </div>
 
 
    <div class="table-responsive">

@@ -9,7 +9,9 @@
             $("#TextName").val("");
             $("#TextLocation").val("");
             $("#sbtnSave").val("Create Site");
+            $("#sbtnDelete").hide();
             $("#shdnAddMode").val("true");
+            $("#divMessageArea").hide();
             $("#siteDialog").modal();
         }
     </script>
@@ -65,11 +67,24 @@
                                     </div>
                                 </div>
                             </div>
+                            <div id="divMessageArea" runat="server" visible="false">
+                                <div class="clearfix"></div>
+                                <div class="row messageArea">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class="well">
+                                            <asp:Label ID="lblsMessage" runat="server"
+                                                CssClass="text-warning"
+                                                Text="This is some text to show what a message would look like."></asp:Label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+<%--                        </div>--%>
                         <div class="modal-footer">
                             <asp:Button ID="sbtnCancel" CssClass="btn btn-default"
                                 title="Cancel" formvalidate="formvalidate"
-                                Text="Cancel"
+                                Text="Close"
                                 UseSubmitBehavior="false"
                                 data-dismiss="modal"
                                 ClientIDMode="Static" 
@@ -81,10 +96,10 @@
                                 ClientIDMode="Static"
                                 runat="server"/>
                             <asp:Button ID="sbtnDelete" runat="server"
-                            Text="Delete" CssClass="btn btn-danger"
-                            title="Delete Site"
-                            ClientIDMode="Static"
-                            OnClick="sbtnDelete_OnClickbtnDelete_OnClick" />
+                                Text="Delete" CssClass="btn btn-danger"
+                                title="Delete Site"
+                                ClientIDMode="Static"
+                                OnClick="sbtnDelete_OnClickbtnDelete_OnClick" />
                         </div>
                     </div>
                 </div>
