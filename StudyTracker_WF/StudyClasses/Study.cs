@@ -15,5 +15,8 @@ namespace StudyTracker_WF.StudyClasses
         public DateTime CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
+        public int site_id { get; set; }
+        public string SName { get; set; }
+        public string SLocation { get; set; }
     }
 }

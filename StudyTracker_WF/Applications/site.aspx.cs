@@ -69,10 +69,10 @@ namespace StudyTracker_WF.Applications
                 if (Convert.ToBoolean(shdnAddMode.Value))
                 {
                     lblsMessage.Text = "Inserting";
+                    sbtnSave.Text = "Create Site";
                     ss.InsertSite(site);
                     lblsMessage.Text = "Site Inserted Successfully!";
                     divMessageArea.Visible = true;
-                    sbtnSave.Visible = false;
                     GridView1.DataBind();
                 }
                 else
@@ -82,7 +82,6 @@ namespace StudyTracker_WF.Applications
                     ss.UpdateSite(site);
                     lblsMessage.Text = "Site Updated Successfully!";
                     divMessageArea.Visible = true;
-                    sbtnSave.Visible = false;
                     GridView1.DataBind();
 
                 }
@@ -123,7 +122,7 @@ namespace StudyTracker_WF.Applications
                 divMessageArea.Visible = true;
                 GridView1.DataBind();
             }
-            catch (Exception)
+            catch (Exception d)
             {
                 lblsMessage.Text = "Error while Deleting Site";
                 divMessageArea.Visible = true;

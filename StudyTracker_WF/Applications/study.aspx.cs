@@ -8,7 +8,9 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using StudyTracker_WF.SiteClasses;
 using StudyTracker_WF.StudyClasses;
+using StudyTracker_WF.StudysiteClasses;
 
 namespace StudyTracker_WF.Study
 {
@@ -18,6 +20,7 @@ namespace StudyTracker_WF.Study
         {
             if (!Page.IsPostBack)
             {
+                GridRefresh();
                 if (Request.QueryString["id"] != null)
                 {
                     var pk = Convert.ToString(Request.QueryString["id"]);
@@ -29,22 +32,32 @@ namespace StudyTracker_WF.Study
 
                     LoadForEdit(pk);
                     LoadEditScript();
-                    
+
                 }
             }
         }
 
+
+        //#region WebMethods
+
+        //[System.Web.Services.WebMethod]
+        //public static List<Site> SitesForList()
+        //{
+        //    SiteManager sitm = new SiteManager();
+        //    return sitm.GetSites();
+        //}
+        //#endregion
+
+     
         public void LoadForEdit(string pk)
         {
             StudyManager smr = new StudyManager();
-            //StudyClasses.Study e = new StudyClasses.Study();
             var s = smr.GetStudy(Convert.ToInt32(pk));
             TextTitle.Text = s.Title;
             TextPI.Text = s.PrincipalInvestigator;
             TextAvail.Checked = s.Availability;
             hdnPK.Value = s.Id.ToString();
             hdnAddMode.Value = "false";
-            
         }
 
         public void LoadEditScript()
@@ -57,7 +70,7 @@ namespace StudyTracker_WF.Study
 
             Page.ClientScript.RegisterStartupScript(this.GetType(), "EditData", sb.ToString(), true);
 
-           }
+        }
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
@@ -91,14 +104,14 @@ namespace StudyTracker_WF.Study
                     GridRefresh();
 
                 }
-                
+
             }
             catch (Exception a)
             {
                 lblMessage.Text = "Error while " + lblMessage.Text + " a Study Record!!";
                 divMessageArea.Visible = true;
             }
-            
+
         }
         public void KeepModalOpenScript()
         {
@@ -107,7 +120,7 @@ namespace StudyTracker_WF.Study
             sb.AppendLine("$(document).ready(function() {");
             sb.AppendLine("$('#studyDialog').modal({ show: true });");
             sb.AppendLine("$('#btnDelete').hide()");
-            sb.AppendLine("$('#sbtnsave').hide()");
+            sb.AppendLine("$('#btnsave').hide()");
             sb.AppendLine("$('#hdnAddMode').val('true')");
             sb.AppendLine("});");
 
@@ -115,11 +128,7 @@ namespace StudyTracker_WF.Study
 
         }
 
-        private void GridRefresh()
-        {
-            GridView1.DataBind();
-        }
-
+        
         protected void btnDelete_OnClick(object sender, EventArgs e)
         {
             try
@@ -138,6 +147,84 @@ namespace StudyTracker_WF.Study
                 lblMessage.Text = "Error while Deleting Study";
                 divMessageArea.Visible = true;
             }
+
+        }
+
+
+        #region Gridview Events
+        protected void GridView1_OnRowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Assign")
+            {
+                int studyId = 0;
+                int.TryParse(e.CommandArgument.ToString(),out studyId);
+                BindDropdown();
+                hdnStudyId.Value = e.CommandArgument.ToString();
+                OpenSiteAssignment();
+            }
+        }
+
+        
+        #endregion
+
+        protected void Button1_OnClick(object sender, EventArgs e)
+        {
+            Button btnAssign = (Button) sender;
+            BindDropdown();
+            hdnStudyId.Value = btnAssign.CommandArgument.ToString();
+            OpenSiteAssignment();
+
+        }
+
+        public void BindDropdown()
+        {
+            ddlSite.DataSource = new SiteManager().GetSites();
+            ddlSite.DataTextField = "DropdownFormat";
+            ddlSite.DataValueField = "SiteId";
+            ddlSite.DataBind();
+
+        }
+
+        public void OpenSiteAssignment()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("$(document).ready(function() {");
+            sb.AppendLine("$('#assignSiteDialog').modal({ show: true });");
+            sb.AppendLine("});");
+
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "PopAssignSite", sb.ToString(), true);
+
+        }
+
+        private void GridRefresh()
+        {
+            GridView1.DataSource = new StudyManager().GetStudies();
+            GridView1.DataBind();
+        }
+
+        protected void btnAssignSiteSave_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenSiteAssignment();
+                StudysiteManager ssmgr = new StudysiteManager();
+                var studysite = new Studysite();
+                studysite.study_id = Convert.ToInt32(hdnStudyId.Value);
+                var idsite = ddlSite.SelectedValue;
+                studysite.site_id = int.Parse(ddlSite.SelectedValue);
+                ssmgr.InsertStudysite(studysite);
+                lblAssignMsg.Text = "Site assigned Successfully!!";
+                divAssignMsg.Visible = true;
+
+            }
+
+            catch (Exception r)
+            {
+                lblAssignMsg.Text = "Error while Assigning Site";
+                divAssignMsg.Visible = true;
+            }
+
 
         }
     }

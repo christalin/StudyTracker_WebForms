@@ -399,6 +399,8 @@
     </Compile>
     <Compile Include="StudyClasses\Study.cs" />
     <Compile Include="StudyClasses\StudyManager.cs" />
+    <Compile Include="StudysiteClasses\Studysite.cs" />
+    <Compile Include="StudysiteClasses\StudysiteManager.cs" />
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

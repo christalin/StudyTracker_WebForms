@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using StudyTracker_WF.SiteClasses;
 
 namespace StudyTracker_WF.StudyClasses
 {
@@ -14,12 +15,17 @@ namespace StudyTracker_WF.StudyClasses
         {
             DataTable dt = new DataTable();
             SqlDataAdapter da = null;
+            SqlCommand cmd = null;
             //string sql = "SELECT * FROM Study";
             string storedprocGetstudies = "GetStudies";
-            da = new SqlDataAdapter(storedprocGetstudies,
-                                    ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString);
-
+            cmd = new SqlCommand(storedprocGetstudies,
+                                    new SqlConnection(ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString));
+            cmd.CommandType = CommandType.StoredProcedure;
+            
+            da = new SqlDataAdapter(cmd);
             da.Fill(dt);
+            //cmd.Parameters.Add(new SqlParameter("@site_id", site_id));
+
 
             var query =
               (from dr in dt.AsEnumerable()
@@ -28,11 +34,13 @@ namespace StudyTracker_WF.StudyClasses
                    Id = Convert.ToInt32(dr["Id"]),
                    Title = dr["Title"].ToString(),
                    PrincipalInvestigator                  = dr["PrincipalInvestigator"].ToString(),
-                   Availability = bool.Parse(dr["Availability"].ToString()),
-                   CreatedBy = dr["CreatedBy"].ToString(),
-                   CreatedDate = DateTime.Parse(dr["CreatedDate"].ToString()),
-                   UpdatedBy = dr["UpdatedBy"].ToString(),
-                   UpdatedDate = DateTime.Parse(dr["UpdatedDate"].ToString())
+                   //SName = dr["Name"].ToString(),
+                   //SLocation = dr["Location"].ToString(),
+                   Availability = bool.Parse(dr["Availability"].ToString())
+                   //CreatedBy = dr["CreatedBy"].ToString(),
+                   //CreatedDate = DateTime.Parse(dr["CreatedDate"].ToString()),
+                   //UpdatedBy = dr["UpdatedBy"].ToString(),
+                   //UpdatedDate = DateTime.Parse(dr["UpdatedDate"].ToString())
                });
 
             return query.ToList();
@@ -146,6 +154,7 @@ namespace StudyTracker_WF.StudyClasses
             objcmd.ExecuteNonQuery();
             
         }
+
 
     }
 }

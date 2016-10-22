@@ -15,5 +15,7 @@ namespace StudyTracker_WF.SiteClasses
         public DateTime CreatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
+        public string Desc { get; set; }
+        public string DropdownFormat { get {return Name + " -> " + Location;} }
     }
 }
