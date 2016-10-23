@@ -231,20 +231,58 @@
                 <asp:CheckBoxField DataField="Availability" HeaderText="Availability" SortExpression="Availability" />
                 <asp:TemplateField ShowHeader="False">
                     <ItemTemplate>
-                        <asp:Button ID="Button1" runat="server" CommandName="Assign" CommandArgument=<%#Eval("Id") %> CausesValidation="false" 
-                            Text="Assign Site" CssClass="btn btn-info" UseSubmitBehavior="True" OnClick="Button1_OnClick" />
+                        <asp:Button ID="Button1" runat="server" CommandName="Assign" 
+                            CommandArgument=<%#Eval("Id") %> 
+                            CausesValidation="False" 
+                            Text="Assign Site" CssClass="btn btn-info"
+                             UseSubmitBehavior="True" OnClick="Button1_OnClick" />
                        
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField ShowHeader="False">
+                    <ItemTemplate>
+                          <asp:Button ID="ShowAssignSites" 
+                              CommandName="Show Assigned Sites"
+                              CommandArgument=<%#Eval("Id") %>
+                              CausesValidation="False"
+                              CssClass="btn btn-info" 
+                              runat="server" Text="Show Assigned Sites"
+                              UseSubmitBehavior="True"
+                              OnClick="ShowAssignSites_OnClick"/>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
 
             </Columns>
         </asp:GridView>
-
-        <%--<asp:ObjectDataSource ID="ObjectDataSource1" runat="server" SelectMethod="GetStudies"
-            TypeName="StudyTracker_WF.StudyClasses.StudyManager"></asp:ObjectDataSource>--%>
-
-
-    </div>
+</div>
+    
+ <div class="table-responsive">
+       <asp:GridView ID="GridViewShowSites" runat="server" 
+           CssClass="table table-bordered table-striped"
+           ClientIDMode="Static"
+           PageSize="10" 
+           AutoGenerateColumns="False"
+           AllowPaging="True"
+           OnRowCommand="GridViewShowSites_OnRowCommand">
+           <Columns>
+               <asp:BoundField DataField="StudyTitle" HeaderText="Study Name" SortExpression="Title" />
+                <asp:BoundField DataField="SiteName" HeaderText="Site Name" SortExpression="Name" />
+               <asp:TemplateField ShowHeader="False">
+                    <ItemTemplate>
+                           <asp:Button runat="server" 
+                               CommandName="Delete Assigned Sites" 
+                               CommandArgument='<%#Eval("study_id") + ";" + Eval("site_id") %>'
+                               CausesValidation="False"
+                               CssClass="btn btn-danger"
+                               Text="Delete Assgined Sites" />
+                     </ItemTemplate>
+                </asp:TemplateField>
+           </Columns>
+           
+           
+       </asp:GridView>
+</div>
 
 
 </asp:Content>

@@ -43,7 +43,7 @@
                             <input type="hidden" id="shdnPK" ClientIDMode="Static" runat="server" />
                             <input type="hidden" id="shdnAddMode" runat="server" value="false" ClientIDMode="Static"/>
                             <div class="row">
-                                 <div class="row">
+                                <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class="form-group">
                                         <label for="TextName">Name</label>

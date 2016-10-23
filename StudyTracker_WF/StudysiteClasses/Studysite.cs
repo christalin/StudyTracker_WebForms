@@ -12,5 +12,6 @@ namespace StudyTracker_WF.StudysiteClasses
         public int site_id { get; set; }
         public string StudyTitle { get; set; }
         public string SiteName { get; set; }
+        public int studyId { get; set; }
     }
 }
