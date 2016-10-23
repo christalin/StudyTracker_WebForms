@@ -49,17 +49,19 @@
 </asp:Content>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-8">
-            <h3>STUDY</h3>
-        </div>
-    </div>
-
+    
+    <br/>
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-8">
             <%--            <a id="btnAdd" class="btn btn-primary" onclick="AddData();">Add New Study</a>--%>
             <a href="#" data-toggle="modal" onclick="AddData()" class="btn btn-primary">Add New Study</a>
            
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-8">
+            <h4>LIST OF STUDIES</h4>
         </div>
     </div>
 
@@ -212,8 +214,8 @@
     </div>
 
     <!--Main GridView-->
-    <div class="table-responsive">
-
+    <div class="table-responsive width-75" >
+       
         <asp:GridView ID="GridView1" runat="server" 
             CssClass="table table-striped table-bordered"
             PageSize="10"
@@ -228,7 +230,7 @@
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:BoundField DataField="PrincipalInvestigator" HeaderText="PrincipalInvestigator" SortExpression="PrincipalInvestigator" />
-                <asp:CheckBoxField DataField="Availability" HeaderText="Availability" SortExpression="Availability" />
+                <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Status" />
                 <asp:TemplateField ShowHeader="False">
                     <ItemTemplate>
                         <asp:Button ID="Button1" runat="server" CommandName="Assign" 
@@ -257,25 +259,32 @@
         </asp:GridView>
 </div>
     
- <div class="table-responsive">
+<%--Show Assigned Sites Gridview--%>
+ <div class="table-responsive width-75" id="gridshowsites" runat="server" Visible="False">
+       <div class="row">
+           <div class="col-xs-12 col-sm-6 col-md-8">
+             <h4>ASSIGNED SITES</h4>
+           </div>
+       </div>
        <asp:GridView ID="GridViewShowSites" runat="server" 
            CssClass="table table-bordered table-striped"
            ClientIDMode="Static"
            PageSize="10" 
            AutoGenerateColumns="False"
            AllowPaging="True"
+           EmptyDataText="No Sites Assigned!"
            OnRowCommand="GridViewShowSites_OnRowCommand">
-           <Columns>
+            <Columns>
                <asp:BoundField DataField="StudyTitle" HeaderText="Study Name" SortExpression="Title" />
                 <asp:BoundField DataField="SiteName" HeaderText="Site Name" SortExpression="Name" />
                <asp:TemplateField ShowHeader="False">
                     <ItemTemplate>
                            <asp:Button runat="server" 
-                               CommandName="Delete Assigned Sites" 
+                               CommandName="Delete" 
                                CommandArgument='<%#Eval("study_id") + ";" + Eval("site_id") %>'
                                CausesValidation="False"
                                CssClass="btn btn-danger"
-                               Text="Delete Assgined Sites" />
+                               Text="Delete" />
                      </ItemTemplate>
                 </asp:TemplateField>
            </Columns>

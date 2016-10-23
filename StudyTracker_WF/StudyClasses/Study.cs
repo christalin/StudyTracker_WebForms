@@ -18,5 +18,16 @@ namespace StudyTracker_WF.StudyClasses
         public int site_id { get; set; }
         public string SName { get; set; }
         public string SLocation { get; set; }
+        public string Status
+        {
+            get
+            {
+                if (Availability)
+                {
+                    return "Open";
+                }
+                return "Closed";
+            }
+        }
     }
 }

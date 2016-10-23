@@ -236,6 +236,7 @@ namespace StudyTracker_WF.Study
             var studysite = new StudysiteClasses.Studysite();
             int id = Int32.Parse(assignStudyid);
             GridViewShowSites.DataSource = new StudysiteManager().GetStudysites(id);
+            gridshowsites.Visible = true;
             AssignSiteGridRefresh();
         }
 
