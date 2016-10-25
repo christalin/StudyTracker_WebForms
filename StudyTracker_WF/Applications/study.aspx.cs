@@ -37,7 +37,6 @@ namespace StudyTracker_WF.Study
             }
         }
 
-
         //#region WebMethods
 
         //[System.Web.Services.WebMethod]
@@ -151,21 +150,21 @@ namespace StudyTracker_WF.Study
         }
 
 
-        #region Gridview Events
-        protected void GridView1_OnRowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "Assign")
-            {
-                int studyId = 0;
-                int.TryParse(e.CommandArgument.ToString(),out studyId);
-                BindDropdown();
-                hdnStudyId.Value = e.CommandArgument.ToString();
-                OpenSiteAssignment();
-            }
-        }
+        //#region Gridview Events
+        //protected void GridView1_OnRowCommand(object sender, GridViewCommandEventArgs e)
+        //{
+        //    if (e.CommandName == "Assign")
+        //    {
+        //        int studyId = 0;
+        //        int.TryParse(e.CommandArgument.ToString(),out studyId);
+        //        BindDropdown();
+        //        hdnStudyId.Value = e.CommandArgument.ToString();
+        //        OpenSiteAssignment();
+        //    }
+        //}
 
         
-        #endregion
+        //#endregion
 
         protected void Button1_OnClick(object sender, EventArgs e)
         {
@@ -191,7 +190,6 @@ namespace StudyTracker_WF.Study
 
             sb.AppendLine("$(document).ready(function() {");
             sb.AppendLine("$('#assignSiteDialog').modal({ show: true });");
-            //sb.AppendLine("$('#MainContent_divAssignMsg').hide();");
             sb.AppendLine("});");
 
             Page.ClientScript.RegisterStartupScript(this.GetType(), "PopAssignSite", sb.ToString(), true);
@@ -242,17 +240,18 @@ namespace StudyTracker_WF.Study
 
         protected void GridViewShowSites_OnRowCommand(object sender, GridViewCommandEventArgs e)
         {
-            string[] arg = new string[2];
-            arg = e.CommandArgument.ToString().Split(';');
-            //Session["study_id"] = arg[0];
-            //Session["site_id"] = arg[1];
-            StudysiteManager ssd = new StudysiteManager();
-            var da = new StudysiteClasses.Studysite();
-            da.study_id = Convert.ToInt32(arg[0]);
-            da.site_id = Convert.ToInt32(arg[1]);
-            ssd.DeleteAssignedSite(da);
-            GridViewShowSites.DataSource = new StudysiteManager().GetStudysites(da.study_id);
-            AssignSiteGridRefresh();
+            if (e.CommandName == "DeleteAssignSite")
+            {
+                string[] arg = new string[2];
+                arg = e.CommandArgument.ToString().Split(';');
+                StudysiteManager ssd = new StudysiteManager();
+                var da = new StudysiteClasses.Studysite();
+                da.study_id = Convert.ToInt32(arg[0]);
+                da.site_id = Convert.ToInt32(arg[1]);
+                ssd.DeleteAssignedSite(da);
+                GridViewShowSites.DataSource = new StudysiteManager().GetStudysites(da.study_id);
+                AssignSiteGridRefresh();
+            }
 
         }
 

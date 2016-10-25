@@ -29,5 +29,7 @@ namespace StudyTracker_WF.StudyClasses
                 return "Closed";
             }
         }
+
+        public string StudyDropdownFormat { get { return Title + " -> " + PrincipalInvestigator;} }
     }
 }

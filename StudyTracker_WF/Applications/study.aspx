@@ -53,7 +53,6 @@
     <br/>
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-8">
-            <%--            <a id="btnAdd" class="btn btn-primary" onclick="AddData();">Add New Study</a>--%>
             <a href="#" data-toggle="modal" onclick="AddData()" class="btn btn-primary">Add New Study</a>
            
         </div>
@@ -65,7 +64,7 @@
         </div>
     </div>
 
-    <!--Popup-->
+    <!--Popup Add Study-->
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-8">
             <div class="modal fade" id="studyDialog" tabindex="-1" role="dialog">
@@ -150,7 +149,7 @@
     </div>
 
 
-    <!--Popup Add site-->
+    <!--Popup Assign Site for a Study-->
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-8">
             <div class="modal fade" id="assignSiteDialog" tabindex="-1" role="dialog">
@@ -280,7 +279,7 @@
                <asp:TemplateField ShowHeader="False">
                     <ItemTemplate>
                            <asp:Button runat="server" 
-                               CommandName="Delete" 
+                               CommandName="DeleteAssignSite" 
                                CommandArgument='<%#Eval("study_id") + ";" + Eval("site_id") %>'
                                CausesValidation="False"
                                CssClass="btn btn-danger"
