@@ -149,23 +149,6 @@ namespace StudyTracker_WF.Study
 
         }
 
-
-        //#region Gridview Events
-        //protected void GridView1_OnRowCommand(object sender, GridViewCommandEventArgs e)
-        //{
-        //    if (e.CommandName == "Assign")
-        //    {
-        //        int studyId = 0;
-        //        int.TryParse(e.CommandArgument.ToString(),out studyId);
-        //        BindDropdown();
-        //        hdnStudyId.Value = e.CommandArgument.ToString();
-        //        OpenSiteAssignment();
-        //    }
-        //}
-
-        
-        //#endregion
-
         protected void Button1_OnClick(object sender, EventArgs e)
         {
             Button btnAssign = (Button) sender;

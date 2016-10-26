@@ -71,7 +71,6 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <%--<button type="button" class="close" data-dimiss="modal" aria-hidden="true">&times;</button>--%>
                             <h4 class="modal-title" runat="server" id="lblTitle" clientidmode="Static">Study</h4>
                         </div>
                         <div class="modal-body">
@@ -296,14 +295,5 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="EndOfPageContent" runat="server">
-    <script>
-        // Make DetailView 'Edit', 'Delete', 'New' links show as buttons
-        $(document).ready(function () {
-            $("td[colspan='2'] a").addClass('btn btn-primary');
-        });
-    </script>
+    
 </asp:Content>
-
-<%--            <div id="productEdit" hidden="hidden">--%>
-<%--            <div class="panel panel-primary">--%>
-
