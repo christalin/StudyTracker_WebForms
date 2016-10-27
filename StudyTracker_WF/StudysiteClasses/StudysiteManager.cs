@@ -10,6 +10,35 @@ namespace StudyTracker_WF.StudysiteClasses
 {
     public class StudysiteManager
     {
+        #region - Get All Studysites
+
+        public List<Studysite> GetAllStudysites()
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = null;
+            SqlCommand cmd = null;
+
+            string storedprocGetAllstudysites = "GetAllStudysites";
+            cmd = new SqlCommand(storedprocGetAllstudysites, new SqlConnection(ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString));
+            cmd.CommandType = CommandType.StoredProcedure;
+
+
+            da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+
+            var query =
+                (from dr in dt.AsEnumerable()
+                 select new Studysite()
+                 {
+                     id = Convert.ToInt32(dr["id"]),
+                     StudyTitle = dr["Title"].ToString(),
+                     SiteName = dr["Name"].ToString()
+                 });
+            return query.ToList();
+        }
+#endregion
+
+        #region - Get All the Sites assigned for a Study
         public List<Studysite> GetStudysites(int id)
         {
             DataTable dt = new DataTable();
@@ -36,7 +65,9 @@ namespace StudyTracker_WF.StudysiteClasses
                  });
             return query.ToList();
         }
+        #endregion
 
+        #region - Get All the Studies assigned for a Site
         public List<Studysite> GetStudysitesForSite(int id)
         {
             DataTable dt = new DataTable();
@@ -63,7 +94,9 @@ namespace StudyTracker_WF.StudysiteClasses
                  });
             return query.ToList();
         }
+        #endregion
 
+        #region - Insert a study site combination
         public bool InsertStudysite(Studysite inStudysite)
         {
             string conn = "";
@@ -81,7 +114,9 @@ namespace StudyTracker_WF.StudysiteClasses
 
             return true;
         }
+        #endregion
 
+        #region - Delete a study site combination
         public void DeleteAssignedSite(Studysite inStudysite)
         {
             string conn = "";
@@ -97,5 +132,7 @@ namespace StudyTracker_WF.StudysiteClasses
 
             objcmd.ExecuteNonQuery();
         }
+#endregion
+
     }
 }

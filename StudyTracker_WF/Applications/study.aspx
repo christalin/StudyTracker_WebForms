@@ -257,7 +257,7 @@
         </asp:GridView>
 </div>
     
-<%--Show Assigned Sites Gridview--%>
+<!--Show Assigned Sites Gridview-->
  <div class="table-responsive width-75" id="gridshowsites" runat="server" Visible="False">
        <div class="row">
            <div class="col-xs-12 col-sm-6 col-md-8">

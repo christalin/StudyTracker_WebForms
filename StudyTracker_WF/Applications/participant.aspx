@@ -1,9 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="participant.aspx.cs" Inherits="StudyTracker_WF.Applications.participant" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../Content/PagerStyle.css" rel="stylesheet" type="text/css" />
     <%--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>--%>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <%--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>--%>
     <script type="text/javascript">
         function AddData() {
             $("#phdnPK").val("-1");
@@ -15,7 +16,6 @@
             $("#TextPName").val("");
             $("#TextGender").val("");
             $("#TextDob").val("");
-            $("#TextDob").datepicker();
             $("#TextAddress").val("");
             $("#pbtnsave").val("Create Study");
             $("#pbtnDelete").hide();
@@ -27,19 +27,19 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <br/>
+    <br />
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-8">
             <a href="#" data-toggle="modal" onclick="AddData()" class="btn btn-primary">Add New Participant</a>
         </div>
     </div>
-    <br/>
+    <br />
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-8">
             <h4>LIST OF PARTICIPANTS</h4>
         </div>
     </div>
-    
+
     <!--Popup Add Participant-->
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-8">
@@ -47,7 +47,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" runat="server" id="plblTitle" ClientIDMode="Static">Participant</h4>
+                            <h4 class="modal-title" runat="server" id="plblTitle" clientidmode="Static">Participant</h4>
                         </div>
                         <div class="modal-body">
                             <input type="hidden" id="phdnPK" runat="server" />
@@ -68,9 +68,17 @@
                                         <label for="TextGender">Gender</label>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-                                                <asp:TextBox ID="TextGender" runat="server" CssClass="form-control"
-                                                    autofocus="autofocus" placeholder="Gender"
-                                                    title="Gender" ClientIDMode="Static"></asp:TextBox>
+                                                <asp:RadioButton
+                                                    ID="RadioButtonM"
+                                                    runat="server"
+                                                    Text="M"
+                                                    GroupName="Software" />
+                                                <asp:RadioButton
+                                                    ID="RadioButtonF"
+                                                    runat="server"
+                                                    Text="F"
+                                                    GroupName="Software" />
+
                                             </div>
                                         </div>
                                     </div>
@@ -136,27 +144,148 @@
         </div>
     </div>
 
-    <!---Main GridView -->   
-     <asp:GridView ID="GridViewParticipant" runat="server" 
-        CssClass="table table-bordered table-striped"
-        PageSize="10"
-        AllowPaging="True">
-        <Columns>
-            <asp:TemplateField HeaderText="Study Name">
+    <!--Popup Assign Studysite for a Participant-->
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-8">
+            <div class="modal fade" id="assignStudysiteDialog" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" runat="server" id="lbl2" clientidmode="Static">Assign Study</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="hdnStudysiteId" runat="server" />
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+                                                    <asp:DropDownList ID="ddlStudysite" CssClass="form-control" runat="server">
+                                                    </asp:DropDownList>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="divEnrollMsg" runat="server" visible="false">
+                                    <div class="clearfix"></div>
+                                    <div class="row messageArea">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div class="well">
+                                                <asp:Label ID="lblEnrollMsg" runat="server"
+                                                    ClientIDMode="Static"
+                                                    CssClass="text-warning"
+                                                    Text="This is some text to show what a message would look like."></asp:Label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="modal-footer">
+                                <asp:Button ID="Button2" runat="server" Text="Close"
+                                    CssClass="btn btn-default"
+                                    title="Close"
+                                    formnovalidate="formvalidate" UseSubmitBehavior="false"
+                                    data-dismiss="modal"
+                                    ClientIDMode="Static" />
+                                <asp:Button ID="Button3" runat="server"
+                                    Text="Save" CssClass="btn btn-primary"
+                                    title="Save"
+                                    ClientIDMode="Static"
+                                    OnClick="btnEnrollSave_OnClick" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!---Main GridView -->
+    <div class="table-responsive width-75">
+        <asp:GridView ID="GridViewParticipant" runat="server"
+            CssClass="table table-bordered table-striped"
+            PageSize="10"
+            AllowPaging="True">
+            <Columns>
+                <asp:TemplateField HeaderText="Study Name">
                     <ItemTemplate>
                         <a href='participant.aspx?id=<%#Eval("ParticipantId") %>'>
                             <asp:Label ID="plblTitle" runat="server" ClientIDMode="Static" Text='<%# Bind("ParticipantName") %>'></asp:Label>
                         </a>
                     </ItemTemplate>
                 </asp:TemplateField>
+
                 <asp:BoundField DataField="Gender" HeaderText="Gender" SortExpression="Gender" />
                 <asp:BoundField DataField="Dob" HeaderText="Dob" SortExpression="Dob" />
                 <asp:BoundField DataField="Address" HeaderText="Address" SortExpression="Address" />
-        </Columns> 
-        
-    </asp:GridView>
+                <asp:TemplateField ShowHeader="False">
+                    <ItemTemplate>
+                        <asp:Button ID="EnrollStudy" runat="server" CommandName="Enroll"
+                            CommandArgument='<%#Eval("ParticipantId") %>'
+                            CausesValidation="False"
+                            Text="Enroll" CssClass="btn btn-info"
+                            UseSubmitBehavior="True"
+                            OnClick="EnrollStudy_OnClick" />
+
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField ShowHeader="False">
+                    <ItemTemplate>
+                        <asp:Button ID="ShowEnrolledStudies"
+                            CommandName="Show Enrolled Studies"
+                            CommandArgument='<%#Eval("ParticipantId") %>'
+                            CausesValidation="False"
+                            CssClass="btn btn-info"
+                            runat="server" Text="Show Enrolled Studies"
+                            UseSubmitBehavior="True"
+                            OnClick="ShowEnrolledStudies_OnClick" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+         </asp:GridView>
+    </div>
+
+    <!--Show Enrollments for participants Gridview-->
+ <div class="table-responsive width-75" id="gridshowenrollments" runat="server" Visible="False">
+       <div class="row">
+           <div class="col-xs-12 col-sm-6 col-md-8">
+             <h4>ENROLLMENTS</h4>
+           </div>
+       </div>
+       <asp:GridView ID="GridViewShowEnrolledStudy" runat="server" 
+           CssClass="table table-bordered table-striped"
+           ClientIDMode="Static"
+           PageSize="10" 
+           AutoGenerateColumns="False"
+           AllowPaging="True"
+           EmptyDataText="Not Enrolled to any Study!"
+           >
+            <Columns>
+               <asp:BoundField DataField="StudyTitle" HeaderText="Study Name" SortExpression="Title" />
+                <asp:BoundField DataField="SiteName" HeaderText="Site Name" SortExpression="Name" />
+               <%--<asp:TemplateField ShowHeader="False">
+                    <ItemTemplate>
+                           <asp:Button runat="server" 
+                               CommandName="DeleteAssignSite" 
+                               CommandArgument='<%#Eval("study_id") + ";" + Eval("site_id") %>'
+                               CausesValidation="False"
+                               CssClass="btn btn-danger"
+                               Text="Delete" />
+                     </ItemTemplate>
+                </asp:TemplateField>--%>
+           </Columns>
+           
+           
+       </asp:GridView>
+</div>
+
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="EndOfPageContent" runat="server">
-    
 </asp:Content>
 

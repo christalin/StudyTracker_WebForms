@@ -49,13 +49,22 @@ namespace StudyTracker_WF.Applications {
         protected global::System.Web.UI.WebControls.TextBox TextPName;
         
         /// <summary>
-        /// TextGender control.
+        /// RadioButtonM control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextGender;
+        protected global::System.Web.UI.WebControls.RadioButton RadioButtonM;
+        
+        /// <summary>
+        /// RadioButtonF control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButtonF;
         
         /// <summary>
         /// TextDob control.
@@ -121,6 +130,69 @@ namespace StudyTracker_WF.Applications {
         protected global::System.Web.UI.WebControls.Button pbtnDelete;
         
         /// <summary>
+        /// lbl2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lbl2;
+        
+        /// <summary>
+        /// hdnStudysiteId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hdnStudysiteId;
+        
+        /// <summary>
+        /// ddlStudysite control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlStudysite;
+        
+        /// <summary>
+        /// divEnrollMsg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divEnrollMsg;
+        
+        /// <summary>
+        /// lblEnrollMsg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEnrollMsg;
+        
+        /// <summary>
+        /// Button2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button2;
+        
+        /// <summary>
+        /// Button3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button3;
+        
+        /// <summary>
         /// GridViewParticipant control.
         /// </summary>
         /// <remarks>
@@ -128,5 +200,23 @@ namespace StudyTracker_WF.Applications {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridViewParticipant;
+        
+        /// <summary>
+        /// gridshowenrollments control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl gridshowenrollments;
+        
+        /// <summary>
+        /// GridViewShowEnrolledStudy control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridViewShowEnrolledStudy;
     }
 }

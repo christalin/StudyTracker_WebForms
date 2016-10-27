@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using StudyTracker_WF.Participant_Classes;
+using StudyTracker_WF.StudysiteClasses;
+using StudyTracker_WF.StudysiteParticipant_Classes;
 
 namespace StudyTracker_WF.Applications
 {
@@ -15,7 +18,6 @@ namespace StudyTracker_WF.Applications
         {
             if (!Page.IsPostBack)
             {
-                TextDob.Text = DateTime.Today.AddDays(-7).ToString("yyyy/MM/dd");
                 GridRefresh();
 
                 if (Request.QueryString["id"] != null)
@@ -40,7 +42,14 @@ namespace StudyTracker_WF.Applications
             ParticipantManager pm = new ParticipantManager();
             var s = pm.GetParticipant(Convert.ToInt32(pk));
             TextPName.Text = s.ParticipantName;
-            TextGender.Text = s.Gender;
+            if (RadioButtonM.Checked == true)
+            {
+                s.Gender = RadioButtonM.Text;
+            }
+            else
+            {
+                s.Gender = RadioButtonF.Text;
+            }
             TextDob.Text = s.Dob.ToString();
             TextAddress.Text = s.Address;
             phdnPK.Value = s.ParticipantId.ToString();
@@ -67,7 +76,15 @@ namespace StudyTracker_WF.Applications
                 ParticipantManager pm = new ParticipantManager();
                 var participant = new Participant();
                 participant.ParticipantName = TextPName.Text;
-                participant.Gender = TextGender.Text;
+                if (RadioButtonM.Checked == true)
+                {
+                    participant.Gender = RadioButtonM.Text;
+                }
+                else
+                {
+                    participant.Gender = RadioButtonF.Text;
+                }
+                //participant.Gender = TextGender.Text;
                 participant.Dob = DateTime.Parse(TextDob.Text);
                 participant.CreatedBy = "Christy";
                 participant.UpdatedBy = "Christy";
@@ -136,6 +153,68 @@ namespace StudyTracker_WF.Applications
 
         }
 
+        protected void EnrollStudy_OnClick(object sender, EventArgs e)
+        {
+            Button b = (Button) sender;
+            BindDropdown();
+            hdnStudysiteId.Value = b.CommandArgument.ToString();
+            OpenStudySites();
+        }
+
+        public void BindDropdown()
+        {
+            ddlStudysite.DataSource = new StudysiteManager().GetAllStudysites();
+            ddlStudysite.DataTextField = "DropdownForParticipant";
+            ddlStudysite.DataValueField = "id";
+            ddlStudysite.DataBind();
+
+        }
+
+        public void OpenStudySites()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("$(document).ready(function() {");
+            sb.AppendLine("$('#assignStudysiteDialog').modal({ show: true });");
+            sb.AppendLine("});");
+
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "PopStudySiteForEnrollment", sb.ToString(), true);
+
+        }
+
+        protected void btnEnrollSave_OnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenStudySites();
+                StudysiteparticipantManager spm = new StudysiteparticipantManager();
+                var enrolledparticipant = new StudysiteParticipant();
+                enrolledparticipant.studysite_id = Int32.Parse(hdnStudysiteId.Value);
+                enrolledparticipant.participant_id = Int32.Parse(ddlStudysite.SelectedValue);
+                spm.InsertEnrolledparticipant(enrolledparticipant);
+                lblEnrollMsg.Text = "Participant enrolled successfully!";
+                divEnrollMsg.Visible = true;
+            }
+            catch (SqlException r)
+            {
+                if (r.Message.Contains("UNIQUE KEY constraint"))
+                {
+                    lblEnrollMsg.Text = "Participant has already been Enrolled!!";
+                }
+                else
+                {
+                    lblEnrollMsg.Text = "";
+                }
+                divEnrollMsg.Visible = true;
+            }
+
+            catch (Exception r)
+            {
+                lblEnrollMsg.Text = "Error while Enrolling participant!!";
+                divEnrollMsg.Visible = true;
+            }
+
+        }
 
         private void GridRefresh()
         {
@@ -143,5 +222,22 @@ namespace StudyTracker_WF.Applications
             GridViewParticipant.DataBind();
         }
 
+        protected void ShowEnrolledStudies_OnClick(object sender, EventArgs e)
+        {
+            Button btnEnroll = (Button) sender;
+            var showenrollid = btnEnroll.CommandArgument.ToString();
+            var participantenrolled = new StudysiteparticipantManager();
+            int id = Int32.Parse(showenrollid);
+            GridViewShowEnrolledStudy.DataSource = new StudysiteparticipantManager().GetEnrollments(id);
+            gridshowenrollments.Visible = true;
+            EnrollRefresh();
+        }
+
+        private void EnrollRefresh()
+        {
+            GridViewShowEnrolledStudy.DataBind();
+        }
+
+       
     }
 }

@@ -13,5 +13,6 @@ namespace StudyTracker_WF.StudysiteClasses
         public string StudyTitle { get; set; }
         public string SiteName { get; set; }
         public int studyId { get; set; }
+        public string DropdownForParticipant { get { return StudyTitle + " -> " + SiteName; } }
     }
 }

@@ -198,7 +198,20 @@ namespace StudyTracker_WF.Study
                 ssmgr.InsertStudysite(studysite);
                 lblAssignMsg.Text = "Site assigned Successfully!!";
                 divAssignMsg.Visible = true;
+                AssignSiteGridRefresh();
 
+            }
+            catch (SqlException r)
+            {
+                if (r.Message.Contains("UNIQUE KEY constraint"))
+                {
+                    lblAssignMsg.Text = "Site has already been assigned!!";
+                }
+                else
+                {
+                    lblAssignMsg.Text = "Error while Assigning Site";
+                }
+                divAssignMsg.Visible = true;
             }
 
             catch (Exception r)
