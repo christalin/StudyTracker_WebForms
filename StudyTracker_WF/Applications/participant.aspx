@@ -2,29 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../Content/PagerStyle.css" rel="stylesheet" type="text/css" />
-    <%--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>--%>
-    <%--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>--%>
-    <script type="text/javascript">
-        function AddData() {
-            $("#phdnPK").val("-1");
-            $("#plblTitle").text("Add New Participant");
-            $("#TextPName").prop('required', true);
-            $("#TextGender").prop('required', true);
-            $("#TextDob").prop('required', true);
-            $("#TextAddress").prop('required', true);
-            $("#TextPName").val("");
-            $("#TextGender").val("");
-            $("#TextDob").val("");
-            $("#TextAddress").val("");
-            $("#pbtnsave").val("Create Study");
-            $("#pbtnDelete").hide();
-            $("#phdnAddMode").val("true");
-            $("#MainContent_pdivMessageArea").hide();
-            $("#participantDialog").modal();
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <%--  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>--%>
 
-        }
-    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <br />
@@ -83,17 +63,31 @@
                                         </div>
                                     </div>
                                     <div class="form-gruop">
+                                        <label for="datepicker">Date Of Birth</label>
+                                        <div class="row">
+                                        <p>Date: <input type="text" id="datepicker"></p>
+                                        </div>
+                                    </div>
+                                    <%--<div class="form-gruop">
                                         <label for="TextDob">Date Of Birth</label>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-                                                <asp:TextBox ID="TextDob" runat="server" CssClass="form-control"
+                                                <%--<asp:TextBox ID="TextDob" runat="server" CssClass="form-control"
                                                     autofocus="autofocus" placeholder="Date Of Birth"
                                                     title="Date Of Birth" ClientIDMode="Static"></asp:TextBox>
+                                                <div>
+                                                    <asp:Calendar ID="Calendar1" runat="server" 
+                                                    ClientIDMode="Static"  Visible="False" SelectionMode="Day"
+                                                    OnSelectionChanged="Calendar1_SelectionChanged"></asp:Calendar>
+                                                </div>
+                                                <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+                                                <%--<<%--asp:LinkButton ID="LinkButton1" runat="server" 
+                                                    onclick="LinkButton1_Click">DOB</asp:LinkButton
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>--%>
                                     <div class="form-gruop">
-                                        <label for="TextAddress">Gender</label>
+                                        <label for="TextAddress">Address</label>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
                                                 <asp:TextBox ID="TextAddress" runat="server" CssClass="form-control"
@@ -104,6 +98,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <br />
                             <div id="pdivMessageArea" runat="server" visible="false">
                                 <div class="clearfix"></div>
                                 <div class="row messageArea">
@@ -211,9 +206,11 @@
         <asp:GridView ID="GridViewParticipant" runat="server"
             CssClass="table table-bordered table-striped"
             PageSize="10"
-            AllowPaging="True">
+            AllowPaging="True"
+            DataKeyNames="ParticipantId"
+            AutoGenerateColumns="False">
             <Columns>
-                <asp:TemplateField HeaderText="Study Name">
+                <asp:TemplateField HeaderText="Participant Name">
                     <ItemTemplate>
                         <a href='participant.aspx?id=<%#Eval("ParticipantId") %>'>
                             <asp:Label ID="plblTitle" runat="server" ClientIDMode="Static" Text='<%# Bind("ParticipantName") %>'></asp:Label>
@@ -222,7 +219,7 @@
                 </asp:TemplateField>
 
                 <asp:BoundField DataField="Gender" HeaderText="Gender" SortExpression="Gender" />
-                <asp:BoundField DataField="Dob" HeaderText="Dob" SortExpression="Dob" />
+               <%-- <asp:BoundField DataField="Dob" HeaderText="Dob" SortExpression="Dob" />--%>
                 <asp:BoundField DataField="Address" HeaderText="Address" SortExpression="Address" />
                 <asp:TemplateField ShowHeader="False">
                     <ItemTemplate>
@@ -265,20 +262,24 @@
            AutoGenerateColumns="False"
            AllowPaging="True"
            EmptyDataText="Not Enrolled to any Study!"
-           >
+           OnRowCommand="GridViewDelete_OnRowCommand">
             <Columns>
-               <asp:BoundField DataField="StudyTitle" HeaderText="Study Name" SortExpression="Title" />
-                <asp:BoundField DataField="SiteName" HeaderText="Site Name" SortExpression="Name" />
-               <%--<asp:TemplateField ShowHeader="False">
+               <asp:BoundField DataField="participant_name" HeaderText="Participant Name" SortExpression="participant_name" />
+               <asp:BoundField DataField="study_name" HeaderText="Study Name" SortExpression="study_name" />
+               <asp:BoundField DataField="site_name" HeaderText="Site Name" SortExpression="site_name" />
+                <asp:BoundField DataField="study_PI" HeaderText="Principal Investigator" SortExpression="study_PI"/>
+               <asp:BoundField DataField="site_location" HeaderText="Location" SortExpression="site_location" />
+
+                <asp:TemplateField ShowHeader="False">
                     <ItemTemplate>
                            <asp:Button runat="server" 
-                               CommandName="DeleteAssignSite" 
-                               CommandArgument='<%#Eval("study_id") + ";" + Eval("site_id") %>'
+                               CommandName="DeleteEnrollment" 
+                               CommandArgument='<%#Eval("id") + ";" + Eval("participant_id") %>'
                                CausesValidation="False"
                                CssClass="btn btn-danger"
                                Text="Delete" />
                      </ItemTemplate>
-                </asp:TemplateField>--%>
+                </asp:TemplateField>
            </Columns>
            
            
@@ -287,5 +288,30 @@
 
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="EndOfPageContent" runat="server">
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        function AddData() {
+            $("#phdnPK").val("-1");
+            $("#plblTitle").text("Add New Participant");
+            $("#TextPName").prop('required', true);
+            $("#TextGender").prop('required', true);
+            $("#TextDob").prop('required', true);
+            $("#TextAddress").prop('required', true);
+            $("#TextPName").val("");
+            $("#TextGender").val("");
+            $("#TextDob").val("");
+            $("#TextAddress").val("");
+            $("#pbtnsave").val("Create Participant");
+            $("#pbtnDelete").hide();
+            $("#phdnAddMode").val("true");
+            $("#MainContent_pdivMessageArea").hide();
+            $("#participantDialog").modal();
+            //var $j = jQuery.noConflict();
+            $("#datepicker").datepicker();
+
+        }
+      //  $(document).ready(function () { $('#datepicker').datepicker(); });
+     
+    </script>
 </asp:Content>
 

@@ -23,7 +23,7 @@ namespace StudyTracker_WF.Applications
                 if (Request.QueryString["id"] != null)
                 {
                     var pk = Convert.ToString(Request.QueryString["id"]);
-                    plblTitle.InnerText = "Update/Delete Study";
+                    plblTitle.InnerText = "Update/Delete Participant";
                     pbtnsave.Text = "Update Participant";
                     pbtnDelete.Text = "Delete Participant";
                     phdnPK.Value = pk;
@@ -42,15 +42,18 @@ namespace StudyTracker_WF.Applications
             ParticipantManager pm = new ParticipantManager();
             var s = pm.GetParticipant(Convert.ToInt32(pk));
             TextPName.Text = s.ParticipantName;
-            if (RadioButtonM.Checked == true)
+            if (s.Gender == "M")
             {
-                s.Gender = RadioButtonM.Text;
+                RadioButtonM.Checked =true;
+                RadioButtonF.Checked = false;
             }
             else
             {
-                s.Gender = RadioButtonF.Text;
+                RadioButtonM.Checked = false;
+                RadioButtonF.Checked = true;
             }
-            TextDob.Text = s.Dob.ToString();
+            //s.Gender = RadioButtonM.Text;
+           //TextDob.Text = s.Dob.ToString();
             TextAddress.Text = s.Address;
             phdnPK.Value = s.ParticipantId.ToString();
             phdnAddMode.Value = "false";
@@ -76,6 +79,7 @@ namespace StudyTracker_WF.Applications
                 ParticipantManager pm = new ParticipantManager();
                 var participant = new Participant();
                 participant.ParticipantName = TextPName.Text;
+                participant.Address = TextAddress.Text;
                 if (RadioButtonM.Checked == true)
                 {
                     participant.Gender = RadioButtonM.Text;
@@ -85,7 +89,7 @@ namespace StudyTracker_WF.Applications
                     participant.Gender = RadioButtonF.Text;
                 }
                 //participant.Gender = TextGender.Text;
-                participant.Dob = DateTime.Parse(TextDob.Text);
+                //participant.Dob = DateTime.Parse(TextDob.Text);
                 participant.CreatedBy = "Christy";
                 participant.UpdatedBy = "Christy";
 
@@ -144,9 +148,9 @@ namespace StudyTracker_WF.Applications
 
             sb.AppendLine("$(document).ready(function() {");
             sb.AppendLine("$('#participantDialog').modal({ show: true });");
-            sb.AppendLine("$('#sbtnDelete').hide()");
-            sb.AppendLine("$('#sbtnsave').hide()");
-            sb.AppendLine("$('#shdnAddMode').val('true')");
+            sb.AppendLine("$('#pbtnDelete').hide();");
+            sb.AppendLine("$('#pbtnsave').hide();");
+            sb.AppendLine("$('#phdnAddMode').val('true');");
             sb.AppendLine("});");
 
             Page.ClientScript.RegisterStartupScript(this.GetType(), "Pop", sb.ToString(), true);
@@ -189,11 +193,13 @@ namespace StudyTracker_WF.Applications
                 OpenStudySites();
                 StudysiteparticipantManager spm = new StudysiteparticipantManager();
                 var enrolledparticipant = new StudysiteParticipant();
-                enrolledparticipant.studysite_id = Int32.Parse(hdnStudysiteId.Value);
-                enrolledparticipant.participant_id = Int32.Parse(ddlStudysite.SelectedValue);
+                enrolledparticipant.studysite_id = Int32.Parse(ddlStudysite.SelectedValue);
+                enrolledparticipant.participant_id = Int32.Parse(hdnStudysiteId.Value);
                 spm.InsertEnrolledparticipant(enrolledparticipant);
                 lblEnrollMsg.Text = "Participant enrolled successfully!";
                 divEnrollMsg.Visible = true;
+                GridViewShowEnrolledStudy.DataSource = new StudysiteparticipantManager().GetEnrollments(enrolledparticipant.id);
+                EnrollRefresh();
             }
             catch (SqlException r)
             {
@@ -229,8 +235,8 @@ namespace StudyTracker_WF.Applications
             var participantenrolled = new StudysiteparticipantManager();
             int id = Int32.Parse(showenrollid);
             GridViewShowEnrolledStudy.DataSource = new StudysiteparticipantManager().GetEnrollments(id);
-            gridshowenrollments.Visible = true;
             EnrollRefresh();
+            gridshowenrollments.Visible = true;
         }
 
         private void EnrollRefresh()
@@ -238,6 +244,24 @@ namespace StudyTracker_WF.Applications
             GridViewShowEnrolledStudy.DataBind();
         }
 
-       
+
+        protected void GridViewDelete_OnRowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DeleteEnrollment")
+            {
+                string [] arg = new string[2];
+                arg = e.CommandArgument.ToString().Split(';');
+                //var id = e.CommandArgument.ToString();
+                StudysiteparticipantManager spm = new StudysiteparticipantManager();
+                var deleterecord = new StudysiteParticipant();
+                //deleterecord.id = Convert.ToInt32(id);
+                deleterecord.id = Convert.ToInt32(arg[0]);
+                deleterecord.participant_id = Convert.ToInt32(arg[1]);
+                spm.DeleteEnrollment(deleterecord);
+                GridViewShowEnrolledStudy.DataSource = new StudysiteparticipantManager().GetEnrollments(deleterecord.participant_id);
+                EnrollRefresh();
+
+            }
+        }
     }
 }

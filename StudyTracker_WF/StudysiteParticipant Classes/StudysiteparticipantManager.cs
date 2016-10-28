@@ -30,7 +30,12 @@ namespace StudyTracker_WF.StudysiteParticipant_Classes
                 (from dr in dt.AsEnumerable()
                     select new StudysiteParticipant()
                     {
-                       studysite_id = Convert.ToInt32(dr["studysite_id"]),
+                       id = Convert.ToInt32(dr["id"]),
+                       study_name = dr["Title"].ToString(),
+                       site_name = dr["Name"].ToString(),
+                       study_PI = dr["PrincipalInvestigator"].ToString(),
+                       site_location = dr["Location"].ToString(),
+                       participant_name = dr["ParticipantName"].ToString(),
                        participant_id = Convert.ToInt32(dr["participant_id"])
 
                     });
@@ -58,5 +63,24 @@ namespace StudyTracker_WF.StudysiteParticipant_Classes
             return true;
         }
         #endregion
+
+        #region-Delete Enrollment
+
+        public void DeleteEnrollment(StudysiteParticipant inStudysiteParticipant)
+        {
+            string conn = "";
+            conn = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+            SqlConnection objsqlconn = new SqlConnection(conn);
+            objsqlconn.Open();
+            string storedProcInsert = "DeleteEnrollment";
+            SqlCommand objcmd = new SqlCommand(storedProcInsert, objsqlconn);
+            objcmd.CommandType = CommandType.StoredProcedure;
+
+            //objcmd.Parameters.Add(new SqlParameter("@studysite_id", inStudysiteParticipant.studysite_id));
+            objcmd.Parameters.Add(new SqlParameter("@id", inStudysiteParticipant.id));
+
+            objcmd.ExecuteNonQuery();
+        }
+#endregion
     }
 }

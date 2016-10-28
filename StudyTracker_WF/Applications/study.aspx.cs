@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.AspNet.Identity;
 using StudyTracker_WF.SiteClasses;
 using StudyTracker_WF.StudyClasses;
 using StudyTracker_WF.StudysiteClasses;
@@ -18,6 +19,7 @@ namespace StudyTracker_WF.Study
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            var username = HttpContext.Current.User.Identity.GetUserName();
             if (!Page.IsPostBack)
             {
                 GridRefresh();
@@ -198,6 +200,7 @@ namespace StudyTracker_WF.Study
                 ssmgr.InsertStudysite(studysite);
                 lblAssignMsg.Text = "Site assigned Successfully!!";
                 divAssignMsg.Visible = true;
+                GridViewShowSites.DataSource = new StudysiteManager().GetStudysites(studysite.study_id);
                 AssignSiteGridRefresh();
 
             }
@@ -234,10 +237,12 @@ namespace StudyTracker_WF.Study
             AssignSiteGridRefresh();
         }
 
-        protected void GridViewShowSites_OnRowCommand(object sender, GridViewCommandEventArgs e)
+        protected void GridViewShowDelete_OnRowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "DeleteAssignSite")
             {
+
+              
                 string[] arg = new string[2];
                 arg = e.CommandArgument.ToString().Split(';');
                 StudysiteManager ssd = new StudysiteManager();

@@ -162,7 +162,9 @@ namespace StudyTracker_WF.Applications
                ssmgr.InsertStudysite(studysite);
                slblAssignMsg.Text = "Study assigned Successfully!!";
                sdivAssignMsg.Visible = true;
-           }
+               GridViewShowStudies.DataSource = new StudysiteManager().GetStudysitesForSite(studysite.site_id);
+               AssignStudyGridRefresh();
+            }
            catch (SqlException f)
            {
                if (f.Message.Contains("UNIQUE KEY constraint"))

@@ -12,7 +12,7 @@
         <%: Scripts.Render("~/bundles/modernizr") %>
            
     </asp:PlaceHolder>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
@@ -25,6 +25,7 @@
                 <%--Framework Scripts--%>
                 <asp:ScriptReference Name="MsAjaxBundle" />
                 <asp:ScriptReference Name="jquery" />
+                <%--<asp:ScriptReference Name="jquery.ui.combined" />--%>
                 <asp:ScriptReference Name="bootstrap" />
                 <asp:ScriptReference Name="respond" />
                 <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
@@ -80,7 +81,7 @@
             </asp:ContentPlaceHolder>
             <hr />
         </div>
-        
+
         <asp:ContentPlaceHolder ID="EndOfPageContent" runat="server">
         </asp:ContentPlaceHolder>
 

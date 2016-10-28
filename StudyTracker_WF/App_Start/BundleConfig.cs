@@ -41,6 +41,10 @@ namespace StudyTracker_WF
                     Path = "~/Scripts/respond.min.js",
                     DebugPath = "~/Scripts/respond.js",
                 });
+
+          
+
+
         }
     }
 }

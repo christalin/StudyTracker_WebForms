@@ -271,7 +271,7 @@
            AutoGenerateColumns="False"
            AllowPaging="True"
            EmptyDataText="No Sites Assigned!"
-           OnRowCommand="GridViewShowSites_OnRowCommand">
+           OnRowCommand="GridViewShowDelete_OnRowCommand">
             <Columns>
                <asp:BoundField DataField="StudyTitle" HeaderText="Study Name" SortExpression="Title" />
                 <asp:BoundField DataField="SiteName" HeaderText="Site Name" SortExpression="Name" />

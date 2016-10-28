@@ -26,9 +26,10 @@ namespace StudyTracker_WF.Participant_Classes
             var query = (from dr in dt.AsEnumerable()
                 select new Participant
                 {
+                    ParticipantId = Convert.ToInt32(dr["ParticipantId"]),
                     ParticipantName = dr["ParticipantName"].ToString(),
                     Gender = dr["Gender"].ToString(),
-                    Dob = Convert.ToDateTime(dr["Dob"]),
+                    //Dob = Convert.ToDateTime(dr["Dob"]),
                     Address = dr["Address"].ToString()
 
                 });
@@ -59,7 +60,7 @@ namespace StudyTracker_WF.Participant_Classes
                      ParticipantId = Convert.ToInt32(dr["ParticipantId"]),
                      ParticipantName = dr["ParticipantName"].ToString(),
                      Gender = dr["Gender"].ToString(),
-                     Dob = DateTime.Parse(dr["Dob"].ToString()),
+                     //Dob = DateTime.Parse(dr["Dob"].ToString()),
                      Address = dr["Address"].ToString(),
                      CreatedBy = dr["CreatedBy"].ToString(),
                      CreatedDate = DateTime.Parse(dr["CreatedDate"].ToString()),
@@ -77,7 +78,7 @@ namespace StudyTracker_WF.Participant_Classes
         {
             string conn = "";
             conn = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
-            SqlConnection objsqlconn = new SqlConnection();
+            SqlConnection objsqlconn = new SqlConnection(conn);
             objsqlconn.Open();
             string storedProcInsert = "InsertParticipant";
             SqlCommand objcmd = new SqlCommand(storedProcInsert, objsqlconn);
@@ -85,7 +86,7 @@ namespace StudyTracker_WF.Participant_Classes
 
             objcmd.Parameters.Add(new SqlParameter("@ParticipantName", inParticipant.ParticipantName));
             objcmd.Parameters.Add(new SqlParameter("@Gender", inParticipant.Gender));
-            objcmd.Parameters.Add(new SqlParameter("@Dob", inParticipant.Dob));
+            //objcmd.Parameters.Add(new SqlParameter("@Dob", inParticipant.Dob));
             objcmd.Parameters.Add(new SqlParameter("@Address", inParticipant.Address));
             objcmd.Parameters.Add(new SqlParameter("@CreatedBy", "Christy"));
             objcmd.Parameters.Add(new SqlParameter("@CreatedDate", DateTime.Now));
@@ -112,7 +113,7 @@ namespace StudyTracker_WF.Participant_Classes
             objcmd.Parameters.Add(new SqlParameter("@ParticipantId", inParticipant.ParticipantId));
             objcmd.Parameters.Add(new SqlParameter("@ParticipantName", inParticipant.ParticipantName));
             objcmd.Parameters.Add(new SqlParameter("@Gender", inParticipant.Gender));
-            objcmd.Parameters.Add(new SqlParameter("@Dob", inParticipant.Dob));
+            //objcmd.Parameters.Add(new SqlParameter("@Dob", inParticipant.Dob));
             objcmd.Parameters.Add(new SqlParameter("@Address", inParticipant.Address));
             objcmd.Parameters.Add(new SqlParameter("@CreatedBy", "Christy"));
             objcmd.Parameters.Add(new SqlParameter("@CreatedDate", DateTime.Now));
