@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.AspNet.Identity;
 using StudyTracker_WF.Participant_Classes;
 using StudyTracker_WF.StudysiteClasses;
 using StudyTracker_WF.StudysiteParticipant_Classes;
@@ -16,6 +18,7 @@ namespace StudyTracker_WF.Applications
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+          
             if (!Page.IsPostBack)
             {
                 GridRefresh();
@@ -44,16 +47,16 @@ namespace StudyTracker_WF.Applications
             TextPName.Text = s.ParticipantName;
             if (s.Gender == "M")
             {
-                RadioButtonM.Checked =true;
-                RadioButtonF.Checked = false;
+                rgender.SelectedValue = "M";
+                
             }
             else
             {
-                RadioButtonM.Checked = false;
-                RadioButtonF.Checked = true;
+                rgender.SelectedValue = "F";
+                
             }
-            //s.Gender = RadioButtonM.Text;
-           //TextDob.Text = s.Dob.ToString();
+
+            datepicker.Value = s.Dob.ToShortDateString();
             TextAddress.Text = s.Address;
             phdnPK.Value = s.ParticipantId.ToString();
             phdnAddMode.Value = "false";
@@ -65,6 +68,7 @@ namespace StudyTracker_WF.Applications
 
             sb.AppendLine("$(document).ready(function() {");
             sb.AppendLine("$('#participantDialog').modal();");
+            sb.AppendLine("$('#datepicker').datepicker();");
             sb.AppendLine("});");
 
             Page.ClientScript.RegisterStartupScript(this.GetType(), "EditParticipantData", sb.ToString(), true);
@@ -80,43 +84,51 @@ namespace StudyTracker_WF.Applications
                 var participant = new Participant();
                 participant.ParticipantName = TextPName.Text;
                 participant.Address = TextAddress.Text;
-                if (RadioButtonM.Checked == true)
-                {
-                    participant.Gender = RadioButtonM.Text;
-                }
-                else
-                {
-                    participant.Gender = RadioButtonF.Text;
-                }
-                //participant.Gender = TextGender.Text;
+                participant.Gender = rgender.SelectedValue;
                 //participant.Dob = DateTime.Parse(TextDob.Text);
-                participant.CreatedBy = "Christy";
-                participant.UpdatedBy = "Christy";
+                //string dateValue = Page.Request.Form["ctl00$MainContent$datepicker"].ToString();
+                participant.Dob = Convert.ToDateTime(datepicker.Value);
+                participant.CreatedBy = HttpContext.Current.User.Identity.GetUserName();
+                participant.UpdatedBy = HttpContext.Current.User.Identity.GetUserName();
 
                 if (Convert.ToBoolean(phdnAddMode.Value))
                 {
-                    plblMessage.Text = "Inserting";
+                    plblMessage.Text = "creating";
                     pbtnsave.Text = "Create Participant";
                     pm.InsertParticipant(participant);
-                    plblMessage.Text = "Participant Inserted Successfully!";
+                    plblMessage.Text = "Participant has been created!";
                     pdivMessageArea.Visible = true;
                     GridRefresh();
 
                 }
                 else
                 {
-                    plblMessage.Text = "Updating";
+                    plblMessage.Text = "updating";
                     participant.ParticipantId = Convert.ToInt32(phdnPK.Value);
                     pm.UpdateParticipant(participant);
-                    plblMessage.Text = "Participant Updated Successfully!";
+                    plblMessage.Text = "Participant has been updated!";
                     pdivMessageArea.Visible = true;
                     GridRefresh();
                 }
+                pbtnsave.Visible = false;
 
+            }
+            catch (SqlException p)
+            {
+                if (p.Message.Contains("UNIQUE KEY constraint"))
+                {
+                    plblMessage.Text = "Participant already Exists!!";
+                    pbtnsave.Visible = true;
+                }
+                else
+                {
+                    plblMessage.Text = "Error while " + plblMessage.Text + " Participant!!";
+                }
+                pdivMessageArea.Visible = true;
             }
             catch (Exception p)
             {
-                plblMessage.Text = "Error while " + plblMessage.Text + " a Participant Record!!";
+                plblMessage.Text = "Error while " + plblMessage.Text + " a Participant!!";
                 pdivMessageArea.Visible = true;
             }
 
@@ -131,15 +143,29 @@ namespace StudyTracker_WF.Applications
                 var participant = new Participant();
                 participant.ParticipantId = Convert.ToInt32(phdnPK.Value);
                 pm.DeleteParticipant(participant);
-                plblMessage.Text = "Participant deleted Successfully!!";
+                plblMessage.Text = "Participant has been deleted!!";
                 pdivMessageArea.Visible = true;
                 GridRefresh();
+            }
+            catch (SqlException q)
+            {
+                if (q.Message.Contains("REFERENCE constraint"))
+                {
+                    plblMessage.Text = "Participant has Enrollments.";
+                    pbtnsave.Visible = true;
+                }
+                else
+                {
+                    plblMessage.Text = "Error while deleting Participant!!";
+                }
+                pdivMessageArea.Visible = true;
             }
             catch (Exception q)
             {
                 plblMessage.Text = "Error while Deleting Participant";
                 pdivMessageArea.Visible = true;
             }
+            pbtnsave.Visible = false;
         }
 
         public void KeepModalOpenScript()
@@ -149,7 +175,6 @@ namespace StudyTracker_WF.Applications
             sb.AppendLine("$(document).ready(function() {");
             sb.AppendLine("$('#participantDialog').modal({ show: true });");
             sb.AppendLine("$('#pbtnDelete').hide();");
-            sb.AppendLine("$('#pbtnsave').hide();");
             sb.AppendLine("$('#phdnAddMode').val('true');");
             sb.AppendLine("});");
 
@@ -162,6 +187,8 @@ namespace StudyTracker_WF.Applications
             Button b = (Button) sender;
             BindDropdown();
             hdnStudysiteId.Value = b.CommandArgument.ToString();
+            divEnrollMsg.Visible = false;
+            EnrollSave.Visible = true;
             OpenStudySites();
         }
 
@@ -198,7 +225,8 @@ namespace StudyTracker_WF.Applications
                 spm.InsertEnrolledparticipant(enrolledparticipant);
                 lblEnrollMsg.Text = "Participant enrolled successfully!";
                 divEnrollMsg.Visible = true;
-                GridViewShowEnrolledStudy.DataSource = new StudysiteparticipantManager().GetEnrollments(enrolledparticipant.id);
+                EnrollSave.Visible = false;
+                GridViewShowEnrolledStudy.DataSource = new StudysiteparticipantManager().GetEnrollments(enrolledparticipant.participant_id);
                 EnrollRefresh();
             }
             catch (SqlException r)
@@ -206,6 +234,7 @@ namespace StudyTracker_WF.Applications
                 if (r.Message.Contains("UNIQUE KEY constraint"))
                 {
                     lblEnrollMsg.Text = "Participant has already been Enrolled!!";
+                    EnrollSave.Visible = true;
                 }
                 else
                 {
@@ -262,6 +291,47 @@ namespace StudyTracker_WF.Applications
                 EnrollRefresh();
 
             }
+        }
+
+        protected void GridViewParticipant_OnPageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GridViewParticipant.DataSource = new ParticipantManager().GetParticipants();
+            GridViewParticipant.DataBind();
+
+            GridViewParticipant.PageIndex = e.NewPageIndex;
+            GridViewParticipant.DataBind();
+        }
+
+        protected void GridViewParticipant_OnSorting(object sender, GridViewSortEventArgs e)
+        {
+            DataTable dataTable = GridViewParticipant.DataSource as DataTable;
+
+            if (dataTable != null)
+            {
+                DataView dataView = new DataView(dataTable);
+                dataView.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(e.SortDirection);
+
+                GridViewParticipant.DataSource = dataView;
+                GridViewParticipant.DataBind();
+            }
+        }
+
+        private string ConvertSortDirectionToSql(SortDirection sortDirection)
+        {
+            string newSortDirection = String.Empty;
+
+            switch (sortDirection)
+            {
+                case SortDirection.Ascending:
+                    newSortDirection = "ASC";
+                    break;
+
+                case SortDirection.Descending:
+                    newSortDirection = "DESC";
+                    break;
+            }
+
+            return newSortDirection;
         }
     }
 }

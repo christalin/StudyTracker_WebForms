@@ -3,8 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../Content/PagerStyle.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <%--  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>--%>
-
+    <%--  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>--%>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <br />
@@ -48,44 +47,31 @@
                                         <label for="TextGender">Gender</label>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-                                                <asp:RadioButton
-                                                    ID="RadioButtonM"
-                                                    runat="server"
-                                                    Text="M"
-                                                    GroupName="Software" />
-                                                <asp:RadioButton
-                                                    ID="RadioButtonF"
-                                                    runat="server"
-                                                    Text="F"
-                                                    GroupName="Software" />
+                                               
+                                                <asp:RadioButtonList ID="rgender" runat="server">
 
+                                                    <asp:ListItem Text="M" Value="M" />
+                                                    <asp:ListItem Text="F" Value="F" />
+                                                    
+                                                    </asp:RadioButtonList>
+                                                <asp:RequiredFieldValidator ID="GenderRequired" runat="server"
+                                                     ErrorMessage="Please select a gender"
+                                                    ControlToValidate="rgender"
+                                                    Display="Dynamic">
+                                                    
+                                                </asp:RequiredFieldValidator>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-gruop">
-                                        <label for="datepicker">Date Of Birth</label>
-                                        <div class="row">
-                                        <p>Date: <input type="text" id="datepicker"></p>
-                                        </div>
-                                    </div>
-                                    <%--<div class="form-gruop">
-                                        <label for="TextDob">Date Of Birth</label>
+                                    <div class="form-group">
+                                        <label>Date Of Birth</label>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-                                                <%--<asp:TextBox ID="TextDob" runat="server" CssClass="form-control"
-                                                    autofocus="autofocus" placeholder="Date Of Birth"
-                                                    title="Date Of Birth" ClientIDMode="Static"></asp:TextBox>
-                                                <div>
-                                                    <asp:Calendar ID="Calendar1" runat="server" 
-                                                    ClientIDMode="Static"  Visible="False" SelectionMode="Day"
-                                                    OnSelectionChanged="Calendar1_SelectionChanged"></asp:Calendar>
-                                                </div>
-                                                <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
-                                                <%--<<%--asp:LinkButton ID="LinkButton1" runat="server" 
-                                                    onclick="LinkButton1_Click">DOB</asp:LinkButton
+                                              <input type="text" id="datepicker" runat="server" ClientIDMode="Static"/>
                                             </div>
                                         </div>
-                                    </div>--%>
+                                    </div>
+                                   
                                     <div class="form-gruop">
                                         <label for="TextAddress">Address</label>
                                         <div class="row">
@@ -99,7 +85,7 @@
                                 </div>
                             </div>
                             <br />
-                            <div id="pdivMessageArea" runat="server" visible="false">
+                            <div id="pdivMessageArea" runat="server" visible="False" clientidmode="Static">
                                 <div class="clearfix"></div>
                                 <div class="row messageArea">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -164,7 +150,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="divEnrollMsg" runat="server" visible="false">
+                                <div id="divEnrollMsg" runat="server" visible="False" clientidmode="Static">
                                     <div class="clearfix"></div>
                                     <div class="row messageArea">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -187,8 +173,9 @@
                                     formnovalidate="formvalidate" UseSubmitBehavior="false"
                                     data-dismiss="modal"
                                     ClientIDMode="Static" />
-                                <asp:Button ID="Button3" runat="server"
+                                <asp:Button ID="EnrollSave" runat="server"
                                     Text="Save" CssClass="btn btn-primary"
+                                    Visible="True"
                                     title="Save"
                                     ClientIDMode="Static"
                                     OnClick="btnEnrollSave_OnClick" />
@@ -205,7 +192,9 @@
     <div class="table-responsive width-75">
         <asp:GridView ID="GridViewParticipant" runat="server"
             CssClass="table table-bordered table-striped"
-            PageSize="10"
+            PageSize="5"
+            OnPageIndexChanging="GridViewParticipant_OnPageIndexChanging"
+            OnSorting="GridViewParticipant_OnSorting"
             AllowPaging="True"
             DataKeyNames="ParticipantId"
             AutoGenerateColumns="False">
@@ -219,7 +208,7 @@
                 </asp:TemplateField>
 
                 <asp:BoundField DataField="Gender" HeaderText="Gender" SortExpression="Gender" />
-               <%-- <asp:BoundField DataField="Dob" HeaderText="Dob" SortExpression="Dob" />--%>
+                <%-- <asp:BoundField DataField="Dob" HeaderText="Dob" SortExpression="Dob" />--%>
                 <asp:BoundField DataField="Address" HeaderText="Address" SortExpression="Address" />
                 <asp:TemplateField ShowHeader="False">
                     <ItemTemplate>
@@ -245,50 +234,50 @@
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>
-         </asp:GridView>
+        </asp:GridView>
     </div>
 
     <!--Show Enrollments for participants Gridview-->
- <div class="table-responsive width-75" id="gridshowenrollments" runat="server" Visible="False">
-       <div class="row">
-           <div class="col-xs-12 col-sm-6 col-md-8">
-             <h4>ENROLLMENTS</h4>
-           </div>
-       </div>
-       <asp:GridView ID="GridViewShowEnrolledStudy" runat="server" 
-           CssClass="table table-bordered table-striped"
-           ClientIDMode="Static"
-           PageSize="10" 
-           AutoGenerateColumns="False"
-           AllowPaging="True"
-           EmptyDataText="Not Enrolled to any Study!"
-           OnRowCommand="GridViewDelete_OnRowCommand">
+    <div class="table-responsive width-75" id="gridshowenrollments" runat="server" visible="False">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-8">
+                <h4>ENROLLMENTS</h4>
+            </div>
+        </div>
+        <asp:GridView ID="GridViewShowEnrolledStudy" runat="server"
+            CssClass="table table-bordered table-striped"
+            ClientIDMode="Static"
+            PageSize="10"
+            AutoGenerateColumns="False"
+            AllowPaging="True"
+            EmptyDataText="Not Enrolled to any Study!"
+            OnRowCommand="GridViewDelete_OnRowCommand">
             <Columns>
-               <asp:BoundField DataField="participant_name" HeaderText="Participant Name" SortExpression="participant_name" />
-               <asp:BoundField DataField="study_name" HeaderText="Study Name" SortExpression="study_name" />
-               <asp:BoundField DataField="site_name" HeaderText="Site Name" SortExpression="site_name" />
-                <asp:BoundField DataField="study_PI" HeaderText="Principal Investigator" SortExpression="study_PI"/>
-               <asp:BoundField DataField="site_location" HeaderText="Location" SortExpression="site_location" />
+                <asp:BoundField DataField="participant_name" HeaderText="Participant Name" SortExpression="participant_name" />
+                <asp:BoundField DataField="study_name" HeaderText="Study Name" SortExpression="study_name" />
+                <asp:BoundField DataField="site_name" HeaderText="Site Name" SortExpression="site_name" />
+                <asp:BoundField DataField="study_PI" HeaderText="Principal Investigator" SortExpression="study_PI" />
+                <asp:BoundField DataField="site_location" HeaderText="Location" SortExpression="site_location" />
 
                 <asp:TemplateField ShowHeader="False">
                     <ItemTemplate>
-                           <asp:Button runat="server" 
-                               CommandName="DeleteEnrollment" 
-                               CommandArgument='<%#Eval("id") + ";" + Eval("participant_id") %>'
-                               CausesValidation="False"
-                               CssClass="btn btn-danger"
-                               Text="Delete" />
-                     </ItemTemplate>
+                        <asp:Button runat="server"
+                            CommandName="DeleteEnrollment"
+                            CommandArgument='<%#Eval("id") + ";" + Eval("participant_id") %>'
+                            CausesValidation="False"
+                            CssClass="btn btn-danger"
+                            Text="Delete" />
+                    </ItemTemplate>
                 </asp:TemplateField>
-           </Columns>
-           
-           
-       </asp:GridView>
-</div>
+            </Columns>
+
+
+        </asp:GridView>
+    </div>
 
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="EndOfPageContent" runat="server">
-      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
         function AddData() {
             $("#phdnPK").val("-1");
@@ -304,14 +293,15 @@
             $("#pbtnsave").val("Create Participant");
             $("#pbtnDelete").hide();
             $("#phdnAddMode").val("true");
-            $("#MainContent_pdivMessageArea").hide();
+            $("#pdivMessageArea").hide();
             $("#participantDialog").modal();
-            //var $j = jQuery.noConflict();
+            $('#divEnrollMsg').hide();
             $("#datepicker").datepicker();
+            $("#rgender").val('');
 
         }
-      //  $(document).ready(function () { $('#datepicker').datepicker(); });
-     
+        //  $(document).ready(function () { $('#datepicker').datepicker(); });
+
     </script>
 </asp:Content>
 

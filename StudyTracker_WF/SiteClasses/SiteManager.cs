@@ -80,9 +80,9 @@ namespace StudyTracker_WF.SiteClasses
 
             objcmd.Parameters.Add(new SqlParameter("@Name", inSite.Name));
             objcmd.Parameters.Add(new SqlParameter("@Location", inSite.Location));
-            objcmd.Parameters.Add(new SqlParameter("@CreatedBy", "Christy"));
+            objcmd.Parameters.Add(new SqlParameter("@CreatedBy", inSite.CreatedBy));
             objcmd.Parameters.Add(new SqlParameter("@CreatedDate", DateTime.Now));
-            objcmd.Parameters.Add(new SqlParameter("@UpdatedBy", "Christy"));
+            objcmd.Parameters.Add(new SqlParameter("@UpdatedBy", inSite.UpdatedBy));
             objcmd.Parameters.Add(new SqlParameter("@UpdatedDate", DateTime.Now));
 
             objcmd.ExecuteNonQuery();
@@ -103,9 +103,9 @@ namespace StudyTracker_WF.SiteClasses
             objcmd.Parameters.Add(new SqlParameter("@SiteId", inSite.SiteId));
             objcmd.Parameters.Add(new SqlParameter("@Name", inSite.Name));
             objcmd.Parameters.Add(new SqlParameter("@Location", inSite.Location));
-            objcmd.Parameters.Add(new SqlParameter("@CreatedBy", "Christy"));
+            objcmd.Parameters.Add(new SqlParameter("@CreatedBy", inSite.CreatedBy));
             objcmd.Parameters.Add(new SqlParameter("@CreatedDate", DateTime.Now));
-            objcmd.Parameters.Add(new SqlParameter("@UpdatedBy", "Christy"));
+            objcmd.Parameters.Add(new SqlParameter("@UpdatedBy", inSite.UpdatedBy));
             objcmd.Parameters.Add(new SqlParameter("@UpdatedDate", DateTime.Now));
 
             objcmd.ExecuteNonQuery();

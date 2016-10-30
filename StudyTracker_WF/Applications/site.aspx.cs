@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.AspNet.Identity;
 using StudyTracker_WF.SiteClasses;
 using StudyTracker_WF.StudyClasses;
 using StudyTracker_WF.StudysiteClasses;
@@ -64,32 +65,45 @@ namespace StudyTracker_WF.Applications
                 var site = new SiteClasses.Site();
                 site.Name = TextName.Text;
                 site.Location = TextLocation.Text;
-                site.CreatedBy = "Christy";
-                site.UpdatedBy = "Christy";
+                site.CreatedBy = HttpContext.Current.User.Identity.GetUserName();
+                site.UpdatedBy = HttpContext.Current.User.Identity.GetUserName();
                 
 
 
                 if (Convert.ToBoolean(shdnAddMode.Value))
                 {
-                    lblsMessage.Text = "Inserting";
+                    lblsMessage.Text = "creating";
                     sbtnSave.Text = "Create Site";
                     ss.InsertSite(site);
-                    lblsMessage.Text = "Site Inserted Successfully!";
+                    lblsMessage.Text = "Site has been created!";
                     divMessageArea.Visible = true;
                     GridView1.DataBind();
                 }
                 else
                 {
-                    lblsMessage.Text = "Updating";
+                    lblsMessage.Text = "updating";
                     site.SiteId = Convert.ToInt32(shdnPK.Value);
                     ss.UpdateSite(site);
-                    lblsMessage.Text = "Site Updated Successfully!";
+                    lblsMessage.Text = "Site has been updated!";
                     divMessageArea.Visible = true;
                     GridView1.DataBind();
 
                 }
+                sbtnSave.Visible = false;
             }
-
+            catch (SqlException a)
+            {
+                if (a.Message.Contains("UNIQUE KEY constraint"))
+                {
+                    lblsMessage.Text = "Site already Exists!!";
+                    sbtnSave.Visible = true;
+                }
+                else
+                {
+                    lblsMessage.Text = "Error while " + lblsMessage.Text + " a Site!!";
+                }
+                divMessageArea.Visible = true;
+            }
             catch (Exception a)
             {
                 lblsMessage.Text = "Error while " + lblsMessage.Text + " Site";
@@ -104,7 +118,7 @@ namespace StudyTracker_WF.Applications
             sb.AppendLine("$(document).ready(function() {");
             sb.AppendLine("$('#siteDialog').modal({ show: true });");
             sb.AppendLine("$('#sbtnDelete').hide()");
-            sb.AppendLine("$('#sbtnSave').hide()");
+            //sb.AppendLine("$('#sbtnSave').hide()");
             sb.AppendLine("$('#shdnAddMode').val('true')");
             sb.AppendLine("});");
 
@@ -121,15 +135,29 @@ namespace StudyTracker_WF.Applications
                 var de = new SiteClasses.Site();
                 de.SiteId = Convert.ToInt32(shdnPK.Value);
                 sd.DeleteSite(de);
-                lblsMessage.Text = "Site Deleted Successfully!!";
+                lblsMessage.Text = "Site has been deleted!!";
                 divMessageArea.Visible = true;
                 GridView1.DataBind();
+            }
+            catch (SqlException d)
+            {
+                if (d.Message.Contains("REFERENCE constraint"))
+                {
+                    lblsMessage.Text = "Site has assigned Studies!!";
+                    sbtnSave.Visible = true;
+                }
+                else
+                {
+                    lblsMessage.Text = "Error while deleting Site!!";
+                }
+                divMessageArea.Visible = true;
             }
             catch (Exception d)
             {
                 lblsMessage.Text = "Error while Deleting Site";
                 divMessageArea.Visible = true;
             }
+            sbtnSave.Visible = false;
 
         }
 
@@ -138,12 +166,14 @@ namespace StudyTracker_WF.Applications
            Button btn = (Button) sender;
            BindDropdown();
            hdnSiteId.Value = btn.CommandArgument.ToString();
+           sdivAssignMsg.Visible = false;
+           sAssignstudysave.Visible = true;
            OpenStudyAssignment();
        }
 
         private void BindDropdown()
         {
-            ddlStudy.DataSource = new StudyManager().GetStudies();
+            ddlStudy.DataSource = new StudyManager().GetActiveStudies();
             ddlStudy.DataTextField = "StudyDropdownFormat";
             ddlStudy.DataValueField = "Id";
             ddlStudy.DataBind();
@@ -160,8 +190,9 @@ namespace StudyTracker_WF.Applications
                studysite.site_id = Convert.ToInt32(hdnSiteId.Value);
                studysite.study_id = int.Parse(ddlStudy.SelectedValue);
                ssmgr.InsertStudysite(studysite);
-               slblAssignMsg.Text = "Study assigned Successfully!!";
+               slblAssignMsg.Text = "Study has been assigned!!";
                sdivAssignMsg.Visible = true;
+               sAssignstudysave.Visible = false;
                GridViewShowStudies.DataSource = new StudysiteManager().GetStudysitesForSite(studysite.site_id);
                AssignStudyGridRefresh();
             }
@@ -170,7 +201,8 @@ namespace StudyTracker_WF.Applications
                if (f.Message.Contains("UNIQUE KEY constraint"))
                {
                    slblAssignMsg.Text = "Study has already been assigned!!";
-               }
+                   sAssignstudysave.Visible = true;
+                }
                else
                {
                    slblAssignMsg.Text = "Error while Assigning Study";

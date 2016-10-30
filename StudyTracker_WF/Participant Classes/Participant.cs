@@ -10,7 +10,7 @@ namespace StudyTracker_WF.Participant_Classes
         public int ParticipantId { get; set; }
         public string ParticipantName { get; set; }
         public string Gender { get; set; }
-        //public DateTime Dob { get; set; }
+        public DateTime Dob { get; set; }
         public string Address { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

@@ -71,7 +71,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="divMessageArea" runat="server" visible="false">
+                                <div id="divMessageArea" runat="server" Visible="False" ClientIDMode="Static">
                                     <div class="clearfix"></div>
                                     <div class="row messageArea">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -137,7 +137,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="sdivAssignMsg" runat="server" visible="false">
+                                <div id="sdivAssignMsg" runat="server" Visible="False" ClientIDMode="Static">
                                     <div class="clearfix"></div>
                                     <div class="row messageArea">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -160,7 +160,7 @@
                                     formnovalidate="formvalidate" UseSubmitBehavior="false"
                                     data-dismiss="modal"
                                     ClientIDMode="Static" />
-                                <asp:Button ID="sAssignstudysave" runat="server"
+                                <asp:Button ID="sAssignstudysave" runat="server" Visible="True"
                                     Text="Save" CssClass="btn btn-primary"
                                     title="Save"
                                     ClientIDMode="Static"
@@ -177,7 +177,7 @@
     <div class="table-responsive width-75">
         <asp:GridView ID="GridView1" runat="server" DataSourceID="ObjectDataSource1"
             CssClass="table table-bordered table-striped"
-            PageSize="10"
+            PageSize="5"
             AllowPaging="True"
             AutoGenerateColumns="False" DataKeyNames="SiteId">
             <Columns>

@@ -15,7 +15,7 @@
             $("#btnsave").val("Create Study");
             $("#btnDelete").hide();
             $("#hdnAddMode").val("true");
-            $("#MainContent_divMessageArea").hide();
+            $("#divMessageArea").hide();
             $("#studyDialog").modal();
 
         }
@@ -45,6 +45,13 @@
             //});
         }
 
+        function FireConfirm() {
+            if (confirm('Do you want to delete?'))
+                return true;
+            else
+                return false;
+        }
+
     </script>
 </asp:Content>
 
@@ -59,11 +66,11 @@
     </div>
     <br/>
     <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-8">
-            <h4>LIST OF STUDIES</h4>
+        <div class="col-md-6 col-md-offset-3">
+            <h4><b>LIST OF STUDIES</b></h4>
         </div>
     </div>
-
+    
     <!--Popup Add Study-->
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-8">
@@ -107,7 +114,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="divMessageArea" runat="server" visible="false">
+                            <div id="divMessageArea" runat="server" Visible="False" ClientIDMode="Static">
                                 <div class="clearfix"></div>
                                 <div class="row messageArea">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -174,7 +181,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="divAssignMsg" runat="server" visible="false">
+                            <div id="divAssignMsg" runat="server" Visible="False" ClientIDMode="Static">
                                 <div class="clearfix"></div>
                                 <div class="row messageArea">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -197,7 +204,7 @@
                                 formnovalidate="formvalidate" UseSubmitBehavior="false"
                                 data-dismiss="modal"
                                 ClientIDMode="Static" />
-                            <asp:Button ID="Button3" runat="server"
+                            <asp:Button ID="AssignSave" runat="server"
                                 Text="Save" CssClass="btn btn-primary"
                                 title="Save"
                                 ClientIDMode="Static"
@@ -216,7 +223,9 @@
        
         <asp:GridView ID="GridView1" runat="server" 
             CssClass="table table-striped table-bordered"
-            PageSize="10"
+            PageSize="5"
+            OnPageIndexChanging="GridView1_OnPageIndexChanging"
+            OnSorting="GridView1_OnSorting"
             AllowPaging="True"
             DataKeyNames="Id" AutoGenerateColumns="False">
             <Columns>
@@ -232,7 +241,7 @@
                 <asp:TemplateField ShowHeader="False">
                     <ItemTemplate>
                         <asp:Button ID="Button1" runat="server" CommandName="Assign" 
-                            CommandArgument=<%#Eval("Id") %> 
+                            CommandArgument=<%#Eval("Id") + ";" + Eval("Availability") %> 
                             CausesValidation="False" 
                             Text="Assign Site" CssClass="btn btn-info"
                              UseSubmitBehavior="True" OnClick="Button1_OnClick" />
@@ -282,6 +291,7 @@
                                CommandArgument='<%#Eval("study_id") + ";" + Eval("site_id") %>'
                                CausesValidation="False"
                                CssClass="btn btn-danger"
+                               OnClientClick="return FireConfirm()"
                                Text="Delete" />
                      </ItemTemplate>
                 </asp:TemplateField>
@@ -295,5 +305,6 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="EndOfPageContent" runat="server">
-    
+       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/css/bootstrap-dialog.min.css">
 </asp:Content>

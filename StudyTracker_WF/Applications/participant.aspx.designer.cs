@@ -49,22 +49,31 @@ namespace StudyTracker_WF.Applications {
         protected global::System.Web.UI.WebControls.TextBox TextPName;
         
         /// <summary>
-        /// RadioButtonM control.
+        /// rgender control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton RadioButtonM;
+        protected global::System.Web.UI.WebControls.RadioButtonList rgender;
         
         /// <summary>
-        /// RadioButtonF control.
+        /// GenderRequired control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton RadioButtonF;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator GenderRequired;
+        
+        /// <summary>
+        /// datepicker control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText datepicker;
         
         /// <summary>
         /// TextAddress control.
@@ -175,13 +184,13 @@ namespace StudyTracker_WF.Applications {
         protected global::System.Web.UI.WebControls.Button Button2;
         
         /// <summary>
-        /// Button3 control.
+        /// EnrollSave control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button3;
+        protected global::System.Web.UI.WebControls.Button EnrollSave;
         
         /// <summary>
         /// GridViewParticipant control.

@@ -40,7 +40,37 @@ namespace StudyTracker_WF.StudyClasses
 
             return query.ToList();
         }
-#endregion
+        #endregion
+
+        #region Get All Active Studies
+        public List<Study> GetActiveStudies()
+        {
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = null;
+            SqlCommand cmd = null;
+            //string sql = "SELECT * FROM Study";
+            string storedprocGetstudies = "GetActiveStudies";
+            cmd = new SqlCommand(storedprocGetstudies,
+                                    new SqlConnection(ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString));
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            
+
+            var query =
+              (from dr in dt.AsEnumerable()
+               select new Study
+               {
+                   Id = Convert.ToInt32(dr["Id"]),
+                   Title = dr["Title"].ToString(),
+                   PrincipalInvestigator = dr["PrincipalInvestigator"].ToString(),
+                   Availability = bool.Parse(dr["Availability"].ToString())
+               });
+
+            return query.ToList();
+        }
+        #endregion
 
         #region Get Study By Id
         public Study GetStudy(int Id)
@@ -90,9 +120,9 @@ namespace StudyTracker_WF.StudyClasses
             objcmd.Parameters.Add(new SqlParameter("@Title", inStudy.Title));
             objcmd.Parameters.Add(new SqlParameter("@PrincipalInvestigator", inStudy.PrincipalInvestigator));
             objcmd.Parameters.Add(new SqlParameter("@Availability", inStudy.Availability));
-            objcmd.Parameters.Add(new SqlParameter("@CreatedBy", "Christy"));
+            objcmd.Parameters.Add(new SqlParameter("@CreatedBy", inStudy.CreatedBy));
             objcmd.Parameters.Add(new SqlParameter("@CreatedDate", DateTime.Now));
-            objcmd.Parameters.Add(new SqlParameter("@UpdatedBy", "Christy"));
+            objcmd.Parameters.Add(new SqlParameter("@UpdatedBy", inStudy.UpdatedBy));
             objcmd.Parameters.Add(new SqlParameter("@UpdatedDate", DateTime.Now));
 
             objcmd.ExecuteNonQuery();
